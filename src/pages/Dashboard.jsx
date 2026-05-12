@@ -28,21 +28,21 @@ const Dashboard = () => {
 
        
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-50 flex flex-col items-center">
-          <MenuBookOutlined className="text-pink-400 mb-2" />
+          <MenuBookOutlined className="text-purple-400 mb-2" />
           <span className="text-[10px] text-gray-400 font-bold uppercase mb-1">Fanlar</span>
           <p className="text-2xl font-bold text-gray-800">0</p>
         </div>
 
       
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-50 flex flex-col items-center">
-          <SchoolOutlined className="text-cyan-400 mb-2" />
+          <SchoolOutlined className="text-purple-400 mb-2" />
           <span className="text-[10px] text-gray-400 font-bold uppercase mb-1">Talabalar</span>
           <p className="text-2xl font-bold text-gray-800">1</p>
         </div>
 
       
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-50 flex flex-col items-center">
-          <CardGiftcardOutlined className="text-indigo-400 mb-2" />
+          <CardGiftcardOutlined className="text-purple-400 mb-2" />
           <span className="text-[10px] text-gray-400 font-bold uppercase mb-1">Sovg'alar</span>
           <p className="text-2xl font-bold text-gray-800">3</p>
         </div>
