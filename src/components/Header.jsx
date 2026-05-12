@@ -1,15 +1,24 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { 
   Search, 
   NotificationsNone, 
   DarkModeOutlined, 
-  KeyboardArrowDown,
-  ArrowBackIosNew
+  ArrowBackIosNew,
+  LogoutOutlined
 } from '@mui/icons-material';
 import { Switch, Select, MenuItem, FormControl } from '@mui/material';
 
 const Header = () => {
   const [lang, setLang] = useState('uzb');
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <header className="h-16 flex items-center justify-between px-6 bg-[#f8f9fe]">
@@ -63,6 +72,14 @@ const Header = () => {
             className="w-full h-full object-cover"
           />
         </div>
+
+        <button
+          onClick={handleLogout}
+          className="w-10 h-10 flex items-center justify-center bg-white rounded-xl shadow-sm text-red-400 hover:bg-red-50 hover:text-red-500 transition-all"
+          title="Chiqish"
+        >
+          <LogoutOutlined fontSize="small" />
+        </button>
       </div>
     </header>
   );

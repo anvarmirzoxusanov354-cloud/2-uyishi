@@ -26,7 +26,7 @@ const Sidebar = () => {
       
       <div className="flex items-center gap-2 mb-10 px-2">
         <div className="w-8 h-8 bg-orange-400 rounded-full flex items-center justify-center text-white font-bold">E</div>
-        <span className="text-xl font-bold">EduCoin</span>
+        <span className="text-xl font-bold">Najotedu</span>
       </div>
 
       

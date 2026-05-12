@@ -15,7 +15,7 @@ const Dashboard = () => {
      
       <div>
         <h1 className="text-3xl font-bold text-gray-800 mb-1">Salom, creator!</h1>
-        <p className="text-gray-400 text-sm">EduCoin platformasiga xush kelibsiz!</p>
+        <p className="text-gray-400 text-sm">Najotedu platformasiga xush kelibsiz!</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">

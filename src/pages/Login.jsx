@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Alert } from '@mui/material';
 import loginpage_img from '../assets/study.svg';
+import logo from '../assets/logo-md.png';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -47,8 +48,8 @@ const Login = () => {
             <h2 className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-4">
               MUHAMMAD AL-XORAZMIY NOMIDAGI <br /> TOSHKENT AXBOROT TEXNOLOGIYALARI <br /> UNIVERSITETI
             </h2>
-            <div className="w-20 h-20 bg-green-700 rounded-full mx-auto flex items-center justify-center border-2 border-yellow-500 mb-4 overflow-hidden">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Tashkent_University_of_Information_Technologies_logo.png/600px-Tashkent_University_of_Information_Technologies_logo.png" className="scale-150" alt="TATU" />
+            <div className="w-20 h-20 rounded-full mx-auto flex items-center justify-center mb-4 overflow-hidden">
+              <img src={logo} className="w-full h-full object-contain" alt="TATU" />
             </div>
             <h1 className="text-xl font-bold text-[#1e2a4a]">LEARNING MANAGEMENT SYSTEM</h1>
           </div>
