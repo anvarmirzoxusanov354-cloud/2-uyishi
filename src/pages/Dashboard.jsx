@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   GroupOutlined, 
   MenuBookOutlined, 
@@ -10,6 +10,7 @@ import {
 import { Accordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
 
 const Dashboard = () => {
+  const [teachersCount] = useState(() => Number(localStorage.getItem('teachersCount') || 0));
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
      
@@ -51,7 +52,7 @@ const Dashboard = () => {
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-50 flex flex-col items-center">
           <PeopleAltOutlined className="text-purple-400 mb-2" />
           <span className="text-[10px] text-gray-400 font-bold uppercase mb-1">O'qituvchilar</span>
-          <p className="text-2xl font-bold text-gray-800">0</p>
+          <p className="text-2xl font-bold text-gray-800">{teachersCount}</p>
         </div>
       </div>
 

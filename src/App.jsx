@@ -12,6 +12,7 @@ import Classes from './pages/Classes';
 import Students from './pages/Students';
 import Gifts from './pages/Gifts';
 import Management from './pages/Management';
+import Subscription from './pages/Subscription';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="students" element={<Students />} />
             <Route path="gifts" element={<Gifts />} />
             <Route path="management" element={<Management />} />
+            <Route path="subscription" element={<Subscription />} />
           </Route>
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />

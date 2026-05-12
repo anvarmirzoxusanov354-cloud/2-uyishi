@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   HomeOutlined, 
   PeopleAltOutlined, 
@@ -12,6 +12,7 @@ import {
 
 const Sidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const getLinkClass = (path) => {
     const baseClass = "flex items-center gap-3 px-4 py-3 rounded-xl transition-all ";
@@ -73,7 +74,7 @@ const Sidebar = () => {
                 <p className="text-[10px] text-red-500">Obunangiz tugagan</p>
              </div>
           </div>
-          <button className="w-full bg-[#ff3d00] text-white py-2 rounded-xl text-xs font-bold hover:bg-opacity-90">
+          <button onClick={() => navigate('/subscription')} className="w-full bg-[#ff3d00] text-white py-2 rounded-xl text-xs font-bold hover:bg-opacity-90 cursor-pointer">
             ⚡ Obunani yangilash
           </button>
         </div>
