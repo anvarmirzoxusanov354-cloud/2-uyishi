@@ -30,15 +30,19 @@ const initialTeachers = Array.from({ length: 5 }, (_, i) => ({
 const COLS = ['Nomi', 'Guruh', 'Telefon raqamlari', "Tug'ilgan sanasi", 'Yaratilgan sana', 'Coin', ''];
 
 const LabelBadge = ({ text, idx }) => (
-  <span style={{
-    background: LABELS_COLORS[idx % LABELS_COLORS.length],
-    color: LABELS_TEXT[idx % LABELS_TEXT.length],
-    borderRadius: '6px', padding: '2px 8px', fontSize: '11px', fontWeight: 600, whiteSpace: 'nowrap',
-  }}>{text}</span>
+  <span 
+    className="rounded-[6px] px-2 py-[2px] text-[11px] font-semibold whitespace-nowrap"
+    style={{
+      background: LABELS_COLORS[idx % LABELS_COLORS.length],
+      color: LABELS_TEXT[idx % LABELS_TEXT.length],
+    }}
+  >
+    {text}
+  </span>
 );
 
 const Avatar = ({ name }) => (
-  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#ede9ff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '13px', color: '#7c4dff', flexShrink: 0 }}>
+  <div className="w-8 h-8 rounded-full bg-[#ede9ff] flex items-center justify-center font-bold text-[13px] text-[#7c4dff] shrink-0">
     {name?.charAt(0)?.toUpperCase() || 'Q'}
   </div>
 );
@@ -147,94 +151,90 @@ const Teachers = () => {
   };
 
   return (
-    <div style={{ padding: '24px 28px', minHeight: '100vh', background: '#f8f9fe' }}>
+    <div className="p-[24px_28px] min-h-screen bg-[#f8f9fe]">
 
       {/* Slide-out Add Drawer */}
-      {drawerOpen && <div onClick={() => { setDrawerOpen(false); resetForm(); }} style={{ position: 'fixed', inset: 0, zIndex: 1100, background: 'rgba(0,0,0,0.2)' }} />}
-      <div style={{ position: 'fixed', top: 0, right: 0, height: '100vh', width: '420px', transform: drawerOpen ? 'translateX(0)' : 'translateX(100%)', transition: 'transform 0.32s cubic-bezier(0.4,0,0.2,1)', background: '#fff', zIndex: 1200, display: 'flex', flexDirection: 'column', boxShadow: '-4px 0 24px rgba(0,0,0,0.1)' }}>
+      {drawerOpen && <div onClick={() => { setDrawerOpen(false); resetForm(); }} className="fixed inset-0 z-[1100] bg-black/20" />}
+      <div className={`fixed top-0 right-0 h-screen w-full sm:w-[420px] bg-white z-[1200] flex flex-col shadow-[-4px_0_24px_rgba(0,0,0,0.1)] transition-transform duration-320 ease-[cubic-bezier(0.4,0,0.2,1)] ${drawerOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         {/* Drawer Header */}
-        <div style={{ padding: '20px 20px 14px', borderBottom: '1px solid #f1f1f5', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div className="p-[20px_20px_14px] border-b border-[#f1f1f5] flex justify-between items-start">
           <div>
-            <h2 style={{ margin: '0 0 4px', fontSize: '16px', fontWeight: 700, color: '#1a1a2e' }}>
+            <h2 className="m-0 mb-1 text-[16px] font-bold text-[#1a1a2e]">
               {editId ? "O'qituvchini tahrirlash" : "O'qituvchi qoshish"}
             </h2>
-            <p style={{ margin: 0, fontSize: '12.5px', color: '#9ca3af' }}>Bu yerda siz yangi o'qituvchi qo'shishingiz mumkin.</p>
+            <p className="m-0 text-[12.5px] text-[#9ca3af]">Bu yerda siz yangi o'qituvchi qo'shishingiz mumkin.</p>
           </div>
-          <button onClick={() => { setDrawerOpen(false); resetForm(); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', display: 'flex', padding: '2px' }}>
+          <button onClick={() => { setDrawerOpen(false); resetForm(); }} className="bg-none border-none cursor-pointer text-[#9ca3af] flex p-[2px]">
             <CloseOutlined fontSize="small" />
           </button>
         </div>
 
         {/* Drawer Form */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
+        <div className="flex-1 overflow-y-auto p-5">
 
           {/* Telefon raqam */}
-          <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '7px' }}>Telefon raqam</label>
+          <div className="mb-4">
+            <label className="block text-[13px] font-semibold text-[#374151] mb-[7px]">Telefon raqam</label>
             <input type="text" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })}
-              style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1.5px solid #e5e7eb', fontSize: '13.5px', outline: 'none', boxSizing: 'border-box' }}
-              onFocus={e => (e.target.style.borderColor = '#7c4dff')} onBlur={e => (e.target.style.borderColor = '#e5e7eb')} />
+              className="w-full p-[10px_14px] rounded-[10px] border-[1.5px] border-[#e5e7eb] text-[13.5px] outline-none box-border focus:border-[#7c4dff]" />
           </div>
 
           {/* Mail */}
-          <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '7px' }}>Mail</label>
-            <div style={{ position: 'relative' }}>
-              <EmailOutlined style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', fontSize: '18px', color: '#9ca3af' }} />
+          <div className="mb-4">
+            <label className="block text-[13px] font-semibold text-[#374151] mb-[7px]">Mail</label>
+            <div className="relative">
+              <EmailOutlined className="absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-[#9ca3af]" />
               <input type="email" placeholder="Elektron pochtani kiriting" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })}
-                style={{ width: '100%', padding: '10px 14px 10px 38px', borderRadius: '10px', border: '1.5px solid #e5e7eb', fontSize: '13.5px', outline: 'none', boxSizing: 'border-box' }}
-                onFocus={e => (e.target.style.borderColor = '#7c4dff')} onBlur={e => (e.target.style.borderColor = '#e5e7eb')} />
+                className="w-full p-[10px_14px_10px_38px] rounded-[10px] border-[1.5px] border-[#e5e7eb] text-[13.5px] outline-none box-border focus:border-[#7c4dff]" />
             </div>
           </div>
 
           {/* O'qituvchi FIO */}
-          <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '7px' }}>O'qituvchi FIO</label>
+          <div className="mb-4">
+            <label className="block text-[13px] font-semibold text-[#374151] mb-[7px]">O'qituvchi FIO</label>
             <input type="text" placeholder="Ma'lumotni kiriting" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
-              style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1.5px solid #e5e7eb', fontSize: '13.5px', outline: 'none', boxSizing: 'border-box' }}
-              onFocus={e => (e.target.style.borderColor = '#7c4dff')} onBlur={e => (e.target.style.borderColor = '#e5e7eb')} />
+              className="w-full p-[10px_14px] rounded-[10px] border-[1.5px] border-[#e5e7eb] text-[13.5px] outline-none box-border focus:border-[#7c4dff]" />
           </div>
 
           {/* Tug'ilgan sanasi */}
-          <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '7px' }}>Tug'ilgan sanasi</label>
-            <div style={{ position: 'relative' }}>
-              <CalendarTodayOutlined style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', fontSize: '16px', color: '#9ca3af' }} />
+          <div className="mb-4">
+            <label className="block text-[13px] font-semibold text-[#374151] mb-[7px]">Tug'ilgan sanasi</label>
+            <div className="relative">
+              <CalendarTodayOutlined className="absolute left-3 top-1/2 -translate-y-1/2 text-[16px] text-[#9ca3af]" />
               <input type="text" placeholder="01.03.1990" value={form.born} onChange={e => setForm({ ...form, born: e.target.value })}
-                style={{ width: '100%', padding: '10px 14px 10px 38px', borderRadius: '10px', border: '1.5px solid #e5e7eb', fontSize: '13.5px', outline: 'none', boxSizing: 'border-box' }}
-                onFocus={e => (e.target.style.borderColor = '#7c4dff')} onBlur={e => (e.target.style.borderColor = '#e5e7eb')} />
+                className="w-full p-[10px_14px_10px_38px] rounded-[10px] border-[1.5px] border-[#e5e7eb] text-[13.5px] outline-none box-border focus:border-[#7c4dff]" />
             </div>
           </div>
 
           {/* Guruh — tag chips input */}
-          <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '7px' }}>Guruh</label>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', padding: '8px 12px', borderRadius: '10px', border: '1.5px solid #e5e7eb', background: '#fff', alignItems: 'center', minHeight: '44px' }}
-              onFocus={() => {}} onClick={() => document.getElementById('guruh-search-input').focus()}>
-              <SearchOutlined style={{ fontSize: '17px', color: '#9ca3af', flexShrink: 0 }} />
+          <div className="mb-4">
+            <label className="block text-[13px] font-semibold text-[#374151] mb-[7px]">Guruh</label>
+            <div className="flex flex-wrap gap-1.5 p-[8px_12px] rounded-[10px] border-[1.5px] border-[#e5e7eb] bg-white items-center min-h-[44px] cursor-text"
+               onClick={() => document.getElementById('guruh-search-input').focus()}>
+              <SearchOutlined className="text-[17px] text-[#9ca3af] shrink-0" />
               {form.guruhlar.map((g, i) => (
-                <span key={i} style={{ display: 'flex', alignItems: 'center', gap: '3px', background: '#f0ebff', color: '#7c4dff', borderRadius: '6px', padding: '2px 8px', fontSize: '12px', fontWeight: 600 }}>
+                <span key={i} className="flex items-center gap-[3px] bg-[#f0ebff] text-[#7c4dff] rounded-[6px] p-[2px_8px] text-[12px] font-semibold">
                   {g}
                   <button onClick={() => setForm(prev => ({ ...prev, guruhlar: prev.guruhlar.filter((_, idx) => idx !== i) }))}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#7c4dff', fontSize: '13px', lineHeight: 1, padding: '0 1px' }}>×</button>
+                    className="bg-none border-none cursor-pointer text-[#7c4dff] text-[13px] leading-none p-[0_1px]">×</button>
                 </span>
               ))}
               <input id="guruh-search-input" type="text" placeholder={form.guruhlar.length === 0 ? 'Guruh qidiring...' : ''}
                 value={guruhSearch} onChange={e => setGuruhSearch(e.target.value)}
                 onKeyDown={e => { if ((e.key === 'Enter' || e.key === ',') && guruhSearch.trim()) { e.preventDefault(); setForm(prev => ({ ...prev, guruhlar: [...prev.guruhlar, guruhSearch.trim()] })); setGuruhSearch(''); } }}
-                style={{ border: 'none', outline: 'none', fontSize: '13px', flex: 1, minWidth: '80px', padding: '2px 0' }} />
+                className="border-none outline-none text-[13px] flex-1 min-w-[80px] p-[2px_0]" />
             </div>
-            <p style={{ margin: '4px 0 0', fontSize: '11.5px', color: '#9ca3af' }}>Enter yoki vergul bilan guruh qo'shing</p>
+            <p className="m-0 mt-1 text-[11.5px] text-[#9ca3af]">Enter yoki vergul bilan guruh qo'shing</p>
           </div>
 
           {/* Jinsi */}
-          <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '10px' }}>Jinsi</label>
-            <div style={{ display: 'flex', gap: '20px' }}>
+          <div className="mb-4">
+            <label className="block text-[13px] font-semibold text-[#374151] mb-2.5">Jinsi</label>
+            <div className="flex gap-5">
               {['Erkak', 'Ayol'].map(j => (
-                <label key={j} style={{ display: 'flex', alignItems: 'center', gap: '7px', cursor: 'pointer', fontSize: '13.5px', color: '#374151' }}>
+                <label key={j} className="flex items-center gap-[7px] cursor-pointer text-[13.5px] text-[#374151]">
                   <input type="radio" name="jinsi" value={j} checked={form.jinsi === j} onChange={() => setForm({ ...form, jinsi: j })}
-                    style={{ accentColor: '#7c4dff', width: '16px', height: '16px', cursor: 'pointer' }} />
+                    className="accent-[#7c4dff] w-4 h-4 cursor-pointer" />
                   {j}
                 </label>
               ))}
@@ -242,133 +242,126 @@ const Teachers = () => {
           </div>
 
           {/* Surati */}
-          <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '7px' }}>Surati</label>
+          <div className="mb-4">
+            <label className="block text-[13px] font-semibold text-[#374151] mb-[7px]">Surati</label>
             <div onClick={() => fileInputRef.current?.click()}
-              style={{ border: '1.5px dashed #d1d5db', borderRadius: '10px', padding: '28px 14px', textAlign: 'center', cursor: 'pointer', background: '#fafafa' }}
-              onMouseEnter={e => (e.currentTarget.style.borderColor = '#7c4dff')}
-              onMouseLeave={e => (e.currentTarget.style.borderColor = '#d1d5db')}>
-              <CloudUploadOutlined style={{ fontSize: '28px', color: '#9ca3af', marginBottom: '8px' }} />
-              <p style={{ margin: '0 0 4px', fontSize: '13px', color: '#374151' }}>
-                <span style={{ color: '#7c4dff', fontWeight: 600 }}>Click to upload</span> or drag and drop
+              className="border-[1.5px] border-dashed border-[#d1d5db] rounded-[10px] p-[28px_14px] text-center cursor-pointer bg-[#fafafa] hover:border-[#7c4dff]">
+              <CloudUploadOutlined className="text-[28px] text-[#9ca3af] mb-2" />
+              <p className="m-0 mb-1 text-[13px] text-[#374151]">
+                <span className="text-[#7c4dff] font-semibold">Click to upload</span> or drag and drop
               </p>
-              <p style={{ margin: 0, fontSize: '12px', color: '#9ca3af' }}>JPG or PNG (max. 800x800px)</p>
-              {form.avatarName && <p style={{ margin: '6px 0 0', fontSize: '12px', color: '#7c4dff', fontWeight: 500 }}>{form.avatarName}</p>}
+              <p className="m-0 text-[12px] text-[#9ca3af]">JPG or PNG (max. 800x800px)</p>
+              {form.avatarName && <p className="m-0 mt-1.5 text-[12px] text-[#7c4dff] font-medium">{form.avatarName}</p>}
             </div>
-            <input ref={fileInputRef} type="file" accept="image/jpeg,image/png" style={{ display: 'none' }}
+            <input ref={fileInputRef} type="file" accept="image/jpeg,image/png" className="hidden"
               onChange={e => { if (e.target.files[0]) setForm(prev => ({ ...prev, avatarName: e.target.files[0].name })); }} />
           </div>
 
           {/* + Parol qo'shish */}
-          <div style={{ textAlign: 'right', marginBottom: '4px' }}>
+          <div className="text-right mb-1">
             <button onClick={() => setShowParol(p => !p)}
-              style={{ background: 'none', border: 'none', color: '#7c4dff', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>
+              className="bg-none border-none text-[#7c4dff] text-[13px] font-semibold cursor-pointer">
               + Parol qoshish
             </button>
           </div>
           {showParol && (
-            <div style={{ marginBottom: '8px' }}>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '7px' }}>Parol</label>
+            <div className="mb-2">
+              <label className="block text-[13px] font-semibold text-[#374151] mb-[7px]">Parol</label>
               <input type="password" placeholder="Parolni kiriting" value={form.parol || ''} onChange={e => setForm({ ...form, parol: e.target.value })}
-                style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1.5px solid #e5e7eb', fontSize: '13.5px', outline: 'none', boxSizing: 'border-box' }}
-                onFocus={e => (e.target.style.borderColor = '#7c4dff')} onBlur={e => (e.target.style.borderColor = '#e5e7eb')} />
+                className="w-full p-[10px_14px] rounded-[10px] border-[1.5px] border-[#e5e7eb] text-[13.5px] outline-none box-border focus:border-[#7c4dff]" />
             </div>
           )}
         </div>
 
         {/* Drawer Footer */}
-        <div style={{ padding: '14px 20px', borderTop: '1px solid #f1f1f5', display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+        <div className="p-[14px_20px] border-t border-[#f1f1f5] flex gap-2.5 justify-end">
           <button onClick={() => { setDrawerOpen(false); resetForm(); }}
-            style={{ padding: '9px 18px', borderRadius: '10px', border: '1.5px solid #e5e7eb', background: '#fff', color: '#6b7280', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}
-            onMouseEnter={e => (e.currentTarget.style.background = '#f5f5fb')}
-            onMouseLeave={e => (e.currentTarget.style.background = '#fff')}>
+            className="p-[9px_18px] rounded-[10px] border-[1.5px] border-[#e5e7eb] bg-white text-[#6b7280] text-[13px] font-semibold cursor-pointer hover:bg-[#f5f5fb]">
             Bekor qilish
           </button>
           <button onClick={handleSave}
-            style={{ padding: '9px 22px', borderRadius: '10px', border: 'none', background: form.name.trim() ? '#7c4dff' : '#c4b5fd', color: '#fff', fontSize: '13px', fontWeight: 600, cursor: form.name.trim() ? 'pointer' : 'default', opacity: form.name.trim() ? 1 : 0.7 }}>
+            className={`p-[9px_22px] rounded-[10px] border-none text-white text-[13px] font-semibold ${form.name.trim() ? 'bg-[#7c4dff] cursor-pointer opacity-100' : 'bg-[#c4b5fd] cursor-default opacity-70'}`}>
             Saqlash
           </button>
         </div>
       </div>
 
       {/* Page Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+      <div className="flex flex-col lg:flex-row justify-between items-start mb-6 gap-4">
         <div>
-          <h1 style={{ margin: '0 0 6px', fontSize: '22px', fontWeight: 700, color: '#1a1a2e' }}>O'qituvchilar</h1>
-          <p style={{ margin: 0, fontSize: '13px', color: '#9ca3af' }}>Ushbu sahifada siz o'qituvchilar ro'yxatini va ularning ma'lumotlarini topasiz. Har bir o'qituvchining ismi, fanlari va aloqa ma'lumotlari keltirilgan.</p>
+          <h1 className="m-0 mb-1.5 text-[22px] font-bold text-[#1a1a2e]">O'qituvchilar</h1>
+          <p className="m-0 text-[13px] text-[#9ca3af]">Ushbu sahifada siz o'qituvchilar ro'yxatini va ularning ma'lumotlarini topasiz.</p>
         </div>
-        <div style={{ display: 'flex', gap: '10px', flexShrink: 0, marginLeft: '20px' }}>
+        <div className="flex flex-wrap gap-2.5 w-full lg:w-auto">
           <button onClick={() => exportCSV(filtered)}
-            style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '9px 18px', border: '1.5px solid #e5e7eb', borderRadius: '10px', background: '#fff', color: '#374151', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>
+            className="flex-1 lg:flex-none flex items-center justify-center gap-1.5 p-[9px_18px] border-[1.5px] border-[#e5e7eb] rounded-[10px] bg-white text-[#374151] text-[13px] font-semibold cursor-pointer whitespace-nowrap">
             <FileDownloadOutlined fontSize="small" /> Export
           </button>
           <button onClick={openAdd}
-            style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '9px 18px', border: 'none', borderRadius: '10px', background: '#7c4dff', color: '#fff', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>
+            className="flex-1 lg:flex-none flex items-center justify-center gap-1.5 p-[9px_18px] border-none rounded-[10px] bg-[#7c4dff] text-white text-[13px] font-semibold cursor-pointer whitespace-nowrap">
             <AddOutlined fontSize="small" /> O'qituvchi qo'shish
           </button>
         </div>
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', position: 'relative' }}>
-        <div style={{ position: 'relative' }}>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-3">
+        <div className="relative w-full md:w-auto">
           <button onClick={() => setShowFilter(f => !f)}
-            style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 14px', border: `1.5px solid ${showFilter ? '#7c4dff' : '#e5e7eb'}`, borderRadius: '8px', background: showFilter ? '#f0ebff' : '#fff', color: showFilter ? '#7c4dff' : '#374151', fontSize: '13px', cursor: 'pointer' }}>
-            <FilterListOutlined fontSize="small" /> Filters {filterGuruh && <span style={{ background: '#7c4dff', color: '#fff', borderRadius: '10px', fontSize: '10px', padding: '1px 6px', marginLeft: '2px' }}>1</span>}
+            className={`w-full md:w-auto flex items-center justify-center gap-1.5 p-[8px_14px] border-[1.5px] rounded-[8px] text-[13px] cursor-pointer ${showFilter ? 'border-[#7c4dff] bg-[#f0ebff] text-[#7c4dff]' : 'border-[#e5e7eb] bg-white text-[#374151]'}`}>
+            <FilterListOutlined fontSize="small" /> Filters {filterGuruh && <span className="bg-[#7c4dff] text-white rounded-[10px] text-[10px] p-[1px_6px] ml-0.5">1</span>}
           </button>
           {showFilter && (
-            <div style={{ position: 'absolute', top: '42px', left: 0, background: '#fff', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '14px', zIndex: 500, minWidth: '200px', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}>
-              <p style={{ margin: '0 0 8px', fontSize: '12px', fontWeight: 600, color: '#374151' }}>Guruh bo'yicha</p>
+            <div className="absolute top-[42px] left-0 bg-white border border-[#e5e7eb] rounded-[12px] p-3.5 z-[500] w-full md:min-w-[200px] shadow-[0_4px_20px_rgba(0,0,0,0.1)]">
+              <p className="m-0 mb-2 text-[12px] font-semibold text-[#374151]">Guruh bo'yicha</p>
               <select value={filterGuruh} onChange={e => { setFilterGuruh(e.target.value); setPage(1); }}
-                style={{ width: '100%', padding: '8px 10px', borderRadius: '8px', border: '1.5px solid #e5e7eb', fontSize: '13px', outline: 'none', background: '#fff' }}>
+                className="w-full p-[8px_10px] rounded-[8px] border-[1.5px] border-[#e5e7eb] text-[13px] outline-none bg-white">
                 <option value="">Barchasi</option>
                 {allGuruhlar.map(g => <option key={g} value={g}>{g}</option>)}
               </select>
               {filterGuruh && (
                 <button onClick={() => { setFilterGuruh(''); setPage(1); }}
-                  style={{ marginTop: '8px', width: '100%', padding: '6px', border: 'none', borderRadius: '8px', background: '#f5f5fb', color: '#7c4dff', fontSize: '12.5px', cursor: 'pointer', fontWeight: 600 }}>
+                  className="mt-2 w-full p-1.5 border-none rounded-[8px] bg-[#f5f5fb] text-[#7c4dff] text-[12.5px] cursor-pointer font-semibold">
                   Filterni tozalash
                 </button>
               )}
             </div>
           )}
         </div>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-          <div style={{ position: 'relative' }}>
-            <SearchOutlined style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af', fontSize: '18px' }} />
+        <div className="flex flex-wrap gap-2.5 items-center w-full md:w-auto">
+          <div className="relative flex-1 md:w-[220px]">
+            <SearchOutlined className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[18px]" />
             <input placeholder="Search" value={search} onChange={e => { setSearch(e.target.value); setPage(1); }}
-              style={{ padding: '8px 14px 8px 34px', borderRadius: '8px', border: '1.5px solid #e5e7eb', fontSize: '13px', outline: 'none', width: '220px', background: '#fff' }}
-              onFocus={e => (e.target.style.borderColor = '#7c4dff')}
-              onBlur={e => (e.target.style.borderColor = '#e5e7eb')} />
+              className="w-full p-[8px_14px_8px_34px] rounded-[8px] border-[1.5px] border-[#e5e7eb] text-[13px] outline-none bg-white focus:border-[#7c4dff]" />
           </div>
           <button onClick={() => { setShowArchived(a => !a); setPage(1); }}
-            style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 14px', border: `1.5px solid ${showArchived ? '#7c4dff' : '#e5e7eb'}`, borderRadius: '8px', background: showArchived ? '#f0ebff' : '#fff', color: showArchived ? '#7c4dff' : '#374151', fontSize: '13px', cursor: 'pointer' }}>
+            className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 p-[8px_14px] border-[1.5px] rounded-[8px] text-[13px] cursor-pointer whitespace-nowrap ${showArchived ? 'border-[#7c4dff] bg-[#f0ebff] text-[#7c4dff]' : 'border-[#e5e7eb] bg-white text-[#374151]'}`}>
             <ArchiveOutlined fontSize="small" /> {showArchived ? 'Faollar' : 'Arxiv'}
           </button>
         </div>
       </div>
 
       {/* Bulk action row */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
+      <div className="flex gap-2 mb-3">
         <button onClick={() => exportCSV(anySelected ? teachers.filter(t => t.selected) : filtered)}
-          style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '7px 14px', border: '1.5px solid #e5e7eb', borderRadius: '8px', background: '#fff', color: '#374151', fontSize: '13px', cursor: 'pointer' }}>
+          className="flex items-center gap-1 p-[7px_14px] border-[1.5px] border-[#e5e7eb] rounded-[8px] bg-white text-[#374151] text-[13px] cursor-pointer">
           <FileDownloadOutlined fontSize="small" /> Export {anySelected ? `(${teachers.filter(t => t.selected).length})` : ''}
         </button>
         <button onClick={deleteSelected} disabled={!anySelected}
-          style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '7px 14px', border: `1.5px solid ${anySelected ? '#ef5350' : '#e5e7eb'}`, borderRadius: '8px', background: '#fff', color: anySelected ? '#ef5350' : '#9ca3af', fontSize: '13px', cursor: anySelected ? 'pointer' : 'default' }}>
+          className={`flex items-center gap-1 p-[7px_14px] border-[1.5px] rounded-[8px] bg-white text-[13px] ${anySelected ? 'border-[#ef5350] text-[#ef5350] cursor-pointer' : 'border-[#e5e7eb] text-[#9ca3af] cursor-default'}`}>
           <DeleteOutlineOutlined fontSize="small" /> Delete
         </button>
       </div>
 
       {/* Table */}
-      <div style={{ background: '#fff', borderRadius: '16px', boxShadow: '0 1px 8px rgba(0,0,0,0.06)', overflow: 'hidden' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+      <div className="bg-white rounded-[16px] shadow-[0_1px_8px_rgba(0,0,0,0.06)] overflow-x-auto">
+        <table className="w-full border-collapse text-[13px] min-w-[900px]">
           <thead>
-            <tr style={{ borderBottom: '1px solid #f1f1f5' }}>
-              <th style={{ padding: '12px 14px', textAlign: 'left', width: '36px' }}>
-                <input type="checkbox" checked={allSelected} onChange={toggleAll} style={{ accentColor: '#7c4dff', width: '15px', height: '15px', cursor: 'pointer' }} />
+            <tr className="border-b border-[#f1f1f5]">
+              <th className="p-[12px_14px] text-left w-9">
+                <input type="checkbox" checked={allSelected} onChange={toggleAll} className="accent-[#7c4dff] w-[15px] h-[15px] cursor-pointer" />
               </th>
               {COLS.map((col, i) => (
-                <th key={i} style={{ padding: '12px 10px', textAlign: 'left', fontWeight: 600, color: '#374151', fontSize: '12.5px', whiteSpace: 'nowrap' }}>
+                <th key={i} className="p-[12px_10px] text-left font-semibold text-[#374151] text-[12.5px] whitespace-nowrap">
                   {col}{col === 'Nomi' ? ' ↓' : ''}
                 </th>
               ))}
@@ -379,48 +372,46 @@ const Teachers = () => {
               const visibleLabels = t.labels.slice(0, 3);
               const extra = t.labels.length - 3;
               return (
-                <tr key={t.id} style={{ borderBottom: '1px solid #f9f9fb', background: rowIdx % 2 === 0 ? '#fff' : '#fafafa', transition: 'background 0.15s' }}
-                  onMouseEnter={e => (e.currentTarget.style.background = '#f5f0ff')}
-                  onMouseLeave={e => (e.currentTarget.style.background = rowIdx % 2 === 0 ? '#fff' : '#fafafa')}>
-                  <td style={{ padding: '10px 14px' }}>
-                    <input type="checkbox" checked={t.selected} onChange={() => toggleSelect(t.id)} style={{ accentColor: '#7c4dff', width: '15px', height: '15px', cursor: 'pointer' }} />
+                <tr key={t.id} className={`border-b border-[#f9f9fb] transition-colors duration-150 ${rowIdx % 2 === 0 ? 'bg-white' : 'bg-[#fafafa]'} hover:bg-[#f5f0ff]`}>
+                  <td className="p-[10px_14px]">
+                    <input type="checkbox" checked={t.selected} onChange={() => toggleSelect(t.id)} className="accent-[#7c4dff] w-[15px] h-[15px] cursor-pointer" />
                   </td>
                   {/* Name + labels */}
-                  <td style={{ padding: '10px 10px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <td className="p-[10px_10px]">
+                    <div className="flex items-center gap-2">
                       <Avatar name={t.name} />
                       <div>
-                        <div style={{ fontWeight: 600, color: '#1a1a2e', fontSize: '13px', marginBottom: '3px' }}>{t.name}</div>
-                        <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+                        <div className="font-semibold text-[#1a1a2e] text-[13px] mb-[3px]">{t.name}</div>
+                        <div className="flex gap-1 flex-wrap">
                           {visibleLabels.map((l, i) => <LabelBadge key={i} text={l} idx={i} />)}
-                          {extra > 0 && <span style={{ background: '#f1f1f5', borderRadius: '6px', padding: '2px 7px', fontSize: '11px', color: '#6b7280', fontWeight: 600 }}>+{extra}</span>}
+                          {extra > 0 && <span className="bg-[#f1f1f5] rounded-[6px] p-[2px_7px] text-[11px] text-[#6b7280] font-semibold">+{extra}</span>}
                         </div>
                       </div>
                     </div>
                   </td>
-                  <td style={{ padding: '10px', color: '#6b7280' }}>{t.guruh || '—'}</td>
-                  <td style={{ padding: '10px', color: '#374151' }}>{t.phone}</td>
-                  <td style={{ padding: '10px', color: '#6b7280' }}>{t.born}</td>
-                  <td style={{ padding: '10px', color: '#6b7280' }}>{t.created}</td>
+                  <td className="p-2.5 text-[#6b7280]">{t.guruh || '—'}</td>
+                  <td className="p-2.5 text-[#374151]">{t.phone}</td>
+                  <td className="p-2.5 text-[#6b7280]">{t.born}</td>
+                  <td className="p-2.5 text-[#6b7280]">{t.created}</td>
                   {/* Coin */}
-                  <td style={{ padding: '10px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <span style={{ fontSize: '13px', color: '#f59e0b' }}>●</span>
-                      <span style={{ fontWeight: 700, color: '#1a1a2e', fontSize: '13px' }}>{t.coin.toLocaleString()}</span>
-                      <button onClick={() => changeCoin(t.id, -100)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#ef5350', display: 'flex', padding: '1px' }}>
+                  <td className="p-2.5">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[13px] text-[#f59e0b]">●</span>
+                      <span className="font-bold text-[#1a1a2e] text-[13px]">{t.coin.toLocaleString()}</span>
+                      <button onClick={() => changeCoin(t.id, -100)} className="bg-none border-none cursor-pointer text-[#ef5350] flex p-[1px]">
                         <RemoveCircleOutlineOutlined style={{ fontSize: '16px' }} />
                       </button>
-                      <button onClick={() => changeCoin(t.id, 100)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#22c55e', display: 'flex', padding: '1px' }}>
+                      <button onClick={() => changeCoin(t.id, 100)} className="bg-none border-none cursor-pointer text-[#22c55e] flex p-[1px]">
                         <AddCircleOutlineOutlined style={{ fontSize: '16px' }} />
                       </button>
                     </div>
                   </td>
                   {/* Actions */}
-                  <td style={{ padding: '10px' }}>
-                    <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-                      <button onClick={() => archiveOne(t.id)} title={t.archived ? 'Arxivdan chiqarish' : 'Arxivga qo\'shish'} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', display: 'flex', padding: '3px' }}><RefreshOutlined style={{ fontSize: '16px' }} /></button>
-                      <button onClick={() => deleteOne(t.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#ef5350', display: 'flex', padding: '3px' }}><DeleteOutlineOutlined style={{ fontSize: '16px' }} /></button>
-                      <button onClick={() => openEdit(t)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#7c4dff', display: 'flex', padding: '3px' }}><EditOutlined style={{ fontSize: '16px' }} /></button>
+                  <td className="p-2.5">
+                    <div className="flex gap-1 items-center">
+                      <button onClick={() => archiveOne(t.id)} title={t.archived ? 'Arxivdan chiqarish' : 'Arxivga qo\'shish'} className="bg-none border-none cursor-pointer text-[#9ca3af] flex p-[3px]"><RefreshOutlined style={{ fontSize: '16px' }} /></button>
+                      <button onClick={() => deleteOne(t.id)} className="bg-none border-none cursor-pointer text-[#ef5350] flex p-[3px]"><DeleteOutlineOutlined style={{ fontSize: '16px' }} /></button>
+                      <button onClick={() => openEdit(t)} className="bg-none border-none cursor-pointer text-[#7c4dff] flex p-[3px]"><EditOutlined style={{ fontSize: '16px' }} /></button>
                     </div>
                   </td>
                 </tr>
@@ -431,25 +422,25 @@ const Teachers = () => {
       </div>
 
       {/* Pagination */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px' }}>
+      <div className="flex justify-between items-center mt-4">
         <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
-          style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '8px 16px', border: '1.5px solid #e5e7eb', borderRadius: '8px', background: '#fff', color: page === 1 ? '#d1d5db' : '#374151', fontSize: '13px', cursor: page === 1 ? 'default' : 'pointer', fontWeight: 500 }}>
+          className={`flex items-center gap-1 p-[8px_16px] border-[1.5px] border-[#e5e7eb] rounded-[8px] bg-white text-[13px] font-medium ${page === 1 ? 'text-[#d1d5db] cursor-default' : 'text-[#374151] cursor-pointer'}`}>
           <ChevronLeftOutlined fontSize="small" /> Previous
         </button>
-        <div style={{ display: 'flex', gap: '4px' }}>
+        <div className="flex gap-1">
           {pageNums().map((n, i) =>
             n === '...' ? (
-              <span key={i} style={{ padding: '7px 6px', color: '#9ca3af', fontSize: '13px' }}>...</span>
+              <span key={i} className="p-[7px_6px] text-[#9ca3af] text-[13px]">...</span>
             ) : (
               <button key={i} onClick={() => setPage(n)}
-                style={{ width: '34px', height: '34px', borderRadius: '8px', border: 'none', background: page === n ? '#7c4dff' : 'transparent', color: page === n ? '#fff' : '#374151', fontSize: '13px', fontWeight: page === n ? 700 : 400, cursor: 'pointer' }}>
+                className={`w-[34px] h-[34px] rounded-[8px] border-none text-[13px] cursor-pointer ${page === n ? 'bg-[#7c4dff] text-white font-bold' : 'bg-transparent text-[#374151] font-normal'}`}>
                 {n}
               </button>
             )
           )}
         </div>
         <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}
-          style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '8px 16px', border: '1.5px solid #e5e7eb', borderRadius: '8px', background: '#fff', color: page === totalPages ? '#d1d5db' : '#374151', fontSize: '13px', cursor: page === totalPages ? 'default' : 'pointer', fontWeight: 500 }}>
+          className={`flex items-center gap-1 p-[8px_16px] border-[1.5px] border-[#e5e7eb] rounded-[8px] bg-white text-[13px] font-medium ${page === totalPages ? 'text-[#d1d5db] cursor-default' : 'text-[#374151] cursor-pointer'}`}>
           Next <ChevronRightOutlined fontSize="small" />
         </button>
       </div>

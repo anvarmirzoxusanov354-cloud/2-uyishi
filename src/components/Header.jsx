@@ -6,11 +6,12 @@ import {
   NotificationsNone, 
   DarkModeOutlined, 
   ArrowBackIosNew,
-  LogoutOutlined
+  LogoutOutlined,
+  Menu
 } from '@mui/icons-material';
 import { Switch, Select, MenuItem, FormControl } from '@mui/material';
 
-const Header = () => {
+const Header = ({ onMenuClick }) => {
   const [lang, setLang] = useState('uzb');
   const { logout } = useAuth();
   const navigate = useNavigate();
@@ -21,26 +22,33 @@ const Header = () => {
   };
 
   return (
-    <header className="h-16 flex items-center justify-between px-6 bg-[#f8f9fe]">
-      <div className="flex items-center gap-4">
-        <button className="w-8 h-8 flex items-center justify-center bg-white rounded-lg shadow-sm text-gray-400">
+    <header className="h-16 flex items-center justify-between px-4 lg:px-6 bg-[#f8f9fe]">
+      <div className="flex items-center gap-2 lg:gap-4 flex-1">
+        <button 
+          onClick={onMenuClick}
+          className="lg:hidden w-10 h-10 flex items-center justify-center bg-white rounded-xl shadow-sm text-gray-500"
+        >
+          <Menu />
+        </button>
+        
+        <button className="hidden sm:flex w-8 h-8 items-center justify-center bg-white rounded-lg shadow-sm text-gray-400 shrink-0">
            <ArrowBackIosNew fontSize="small" className="scale-75" />
         </button>
-        <div className="relative group">
+        <div className="relative group max-w-xs w-full sm:w-64">
           <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-gray-400">
             <Search fontSize="small" />
           </div>
           <input 
             type="text" 
             placeholder="Search..." 
-            className="bg-white border-none rounded-xl py-2 pl-10 pr-4 w-64 text-sm focus:ring-2 focus:ring-[#7c4dff] transition-all shadow-sm outline-none"
+            className="bg-white border-none rounded-xl py-2 pl-10 pr-4 w-full text-sm focus:ring-2 focus:ring-[#7c4dff] transition-all shadow-sm outline-none"
           />
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 lg:gap-4 shrink-0">
       
-        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div className="hidden md:block bg-white rounded-xl shadow-sm overflow-hidden">
           <FormControl size="small" variant="standard" sx={{ minWidth: 100, px: 2 }}>
             <Select
               value={lang}
@@ -60,7 +68,7 @@ const Header = () => {
           <NotificationsNone />
         </button>
 
-        <div className="flex items-center gap-1 bg-white px-2 py-1 rounded-xl shadow-sm">
+        <div className="hidden sm:flex items-center gap-1 bg-white px-2 py-1 rounded-xl shadow-sm">
           <DarkModeOutlined fontSize="small" className="text-gray-500" />
           <Switch size="small" color="default" />
         </div>

@@ -7,10 +7,11 @@ import {
   GroupOutlined, 
   CardGiftcardOutlined, 
   SettingsOutlined,
-  DescriptionOutlined
+  DescriptionOutlined,
+  CloseOutlined
 } from '@mui/icons-material';
 
-const Sidebar = () => {
+const Sidebar = ({ onClose }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -23,11 +24,19 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="w-64 bg-white border-r border-gray-100 flex flex-col h-screen sticky top-0 p-4">
+    <div className="w-72 lg:w-64 bg-white border-r border-gray-100 flex flex-col h-screen sticky top-0 p-4">
       
-      <div className="flex items-center gap-2 mb-10 px-2">
-        <div className="w-8 h-8 bg-orange-400 rounded-full flex items-center justify-center text-white font-bold">E</div>
-        <span className="text-xl font-bold">Najotedu</span>
+      <div className="flex items-center justify-between mb-10 px-2">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-orange-400 rounded-full flex items-center justify-center text-white font-bold">E</div>
+          <span className="text-xl font-bold text-gray-900">Najotedu</span>
+        </div>
+        <button 
+          onClick={onClose}
+          className="lg:hidden p-2 text-gray-400 hover:text-gray-600"
+        >
+          <CloseOutlined />
+        </button>
       </div>
 
       

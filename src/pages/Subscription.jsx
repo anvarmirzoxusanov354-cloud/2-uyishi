@@ -14,7 +14,7 @@ const plans = [
     key: 'standart',
     name: 'Standart',
     price: "150,000",
-    icon: <StarOutlined style={{ fontSize: '32px' }} />,
+    icon: <StarOutlined className="text-[32px]" />,
     color: '#6b7280',
     bg: '#f9fafb',
     border: '#e5e7eb',
@@ -32,7 +32,7 @@ const plans = [
     key: 'premium',
     name: 'Premium',
     price: "500,000",
-    icon: <WorkspacePremiumOutlined style={{ fontSize: '32px' }} />,
+    icon: <WorkspacePremiumOutlined className="text-[32px]" />,
     color: '#7c4dff',
     bg: '#f5f0ff',
     border: '#c4b5fd',
@@ -53,7 +53,7 @@ const plans = [
     key: 'vip',
     name: 'VIP',
     price: "1,000,000",
-    icon: <DiamondOutlined style={{ fontSize: '32px' }} />,
+    icon: <DiamondOutlined className="text-[32px]" />,
     color: '#f59e0b',
     bg: '#fffbeb',
     border: '#fcd34d',
@@ -77,66 +77,59 @@ const Subscription = () => {
   const [selected, setSelected] = useState(null);
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8f9fe', padding: '0' }}>
+    <div className="min-h-screen bg-[#f8f9fe] p-0">
       {/* Header */}
-      <div style={{ background: '#fff', borderBottom: '1px solid #f1f1f5', padding: '16px 32px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+      <div className="bg-white border-b border-[#f1f1f5] p-[16px_32px] flex items-center gap-4">
         <button
           onClick={() => navigate(-1)}
-          style={{ width: '36px', height: '36px', borderRadius: '10px', border: 'none', background: '#f5f5fb', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#7c4dff', transition: 'background 0.2s' }}
-          onMouseEnter={e => (e.currentTarget.style.background = '#ede9ff')}
-          onMouseLeave={e => (e.currentTarget.style.background = '#f5f5fb')}
+          className="w-9 h-9 rounded-[10px] border-none bg-[#f5f5fb] cursor-pointer flex items-center justify-center text-[#7c4dff] transition-colors duration-200 hover:bg-[#ede9ff]"
         >
           <ArrowBackOutlined fontSize="small" />
         </button>
         <div>
-          <h1 style={{ margin: 0, fontSize: '20px', fontWeight: 700, color: '#1a1a2e' }}>Obuna rejalarini tanlang</h1>
-          <p style={{ margin: 0, fontSize: '13px', color: '#9ca3af' }}>O'zingizga mos tarifni tanlang va imkoniyatlardan foydalaning</p>
+          <h1 className="m-0 text-[20px] font-bold text-[#1a1a2e]">Obuna rejalarini tanlang</h1>
+          <p className="m-0 text-[13px] text-[#9ca3af]">O'zingizga mos tarifni tanlang va imkoniyatlardan foydalaning</p>
         </div>
       </div>
 
       {/* Plans */}
-      <div style={{ padding: '40px 32px', maxWidth: '1000px', margin: '0 auto' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
+      <div className="p-[40px_32px] max-w-[1000px] mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {plans.map((plan) => (
             <div
               key={plan.key}
               onClick={() => setSelected(plan.key)}
+              className={`rounded-[20px] p-[28px_24px] cursor-pointer relative transition-all duration-200 shadow-[0_1px_6px_rgba(0,0,0,0.05)] ${selected === plan.key ? 'translate-y-[-4px]' : 'translate-y-0'}`}
               style={{
                 background: plan.bg,
                 border: `2px solid ${selected === plan.key ? plan.color : plan.border}`,
-                borderRadius: '20px',
-                padding: '28px 24px',
-                cursor: 'pointer',
-                position: 'relative',
-                transition: 'all 0.2s',
-                boxShadow: selected === plan.key ? `0 4px 20px ${plan.color}33` : '0 1px 6px rgba(0,0,0,0.05)',
-                transform: selected === plan.key ? 'translateY(-4px)' : 'none',
+                boxShadow: selected === plan.key ? `0 4px 20px ${plan.color}33` : undefined,
               }}
             >
               {/* Popular badge */}
               {plan.popular && (
-                <div style={{ position: 'absolute', top: '-12px', left: '50%', transform: 'translateX(-50%)', background: '#7c4dff', color: '#fff', fontSize: '11px', fontWeight: 700, padding: '4px 14px', borderRadius: '20px', whiteSpace: 'nowrap' }}>
+                <div className="absolute top-[-12px] left-1/2 -translate-x-1/2 bg-[#7c4dff] text-white text-[11px] font-bold p-[4px_14px] rounded-[20px] whitespace-nowrap">
                   <BoltOutlined style={{ fontSize: '12px', verticalAlign: 'middle' }} /> Mashhur
                 </div>
               )}
 
               {/* Icon */}
-              <div style={{ color: plan.color, marginBottom: '14px' }}>{plan.icon}</div>
+              <div className="mb-3.5" style={{ color: plan.color }}>{plan.icon}</div>
 
               {/* Name */}
-              <h2 style={{ margin: '0 0 4px 0', fontSize: '20px', fontWeight: 700, color: '#1a1a2e' }}>{plan.name}</h2>
+              <h2 className="m-0 mb-1 text-[20px] font-bold text-[#1a1a2e]">{plan.name}</h2>
 
               {/* Price */}
-              <div style={{ marginBottom: '20px' }}>
-                <span style={{ fontSize: '28px', fontWeight: 800, color: plan.color }}>{plan.price}</span>
-                <span style={{ fontSize: '13px', color: '#9ca3af', marginLeft: '4px' }}>so'm/oy</span>
+              <div className="mb-5">
+                <span className="text-[28px] font-extrabold" style={{ color: plan.color }}>{plan.price}</span>
+                <span className="text-[13px] text-[#9ca3af] ml-1">so'm/oy</span>
               </div>
 
               {/* Features */}
-              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 24px 0', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <ul className="list-none p-0 m-0 mb-6 flex flex-col gap-2.5">
                 {plan.features.map((f, i) => (
-                  <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#374151' }}>
-                    <CheckCircleOutlined style={{ fontSize: '16px', color: plan.color, flexShrink: 0 }} />
+                  <li key={i} className="flex items-center gap-2 text-[13px] text-[#374151]">
+                    <CheckCircleOutlined style={{ fontSize: '16px', color: plan.color }} className="shrink-0" />
                     {f}
                   </li>
                 ))}
@@ -144,13 +137,11 @@ const Subscription = () => {
 
               {/* Button */}
               <button
+                className={`w-full p-3 rounded-[12px] font-bold text-[14px] cursor-pointer border-2 transition-all duration-200`}
                 style={{
-                  width: '100%', padding: '12px', border: 'none', borderRadius: '12px',
                   background: selected === plan.key ? plan.btnBg : '#fff',
                   color: selected === plan.key ? '#fff' : plan.color,
-                  fontWeight: 700, fontSize: '14px', cursor: 'pointer',
-                  border: `2px solid ${plan.color}`,
-                  transition: 'all 0.2s',
+                  borderColor: plan.color,
                 }}
                 onMouseEnter={e => { e.currentTarget.style.background = plan.btnBg; e.currentTarget.style.color = '#fff'; }}
                 onMouseLeave={e => {
@@ -169,10 +160,8 @@ const Subscription = () => {
 
         {/* Confirm button */}
         {selected && (
-          <div style={{ textAlign: 'center', marginTop: '32px' }}>
-            <button style={{ background: '#7c4dff', color: '#fff', border: 'none', borderRadius: '14px', padding: '14px 48px', fontSize: '15px', fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 16px rgba(124,77,255,0.3)', transition: 'opacity 0.2s' }}
-              onMouseEnter={e => (e.currentTarget.style.opacity = '0.9')}
-              onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+          <div className="text-center mt-8">
+            <button className="bg-[#7c4dff] text-white border-none rounded-[14px] p-[14px_48px] text-[15px] font-bold cursor-pointer shadow-[0_4px_16px_rgba(124,77,255,0.3)] transition-opacity duration-200 hover:opacity-90"
             >
               <BoltOutlined style={{ verticalAlign: 'middle', marginRight: '6px' }} />
               Obunani faollashtirish

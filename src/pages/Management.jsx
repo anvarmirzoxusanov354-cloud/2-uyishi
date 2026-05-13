@@ -83,155 +83,151 @@ const KurslarContent = () => {
   };
 
   return (
-    <div style={{ background: '#fff', borderRadius: '16px', padding: '20px', boxShadow: '0 1px 8px rgba(0,0,0,0.06)' }}>
+    <div className="bg-white rounded-[16px] p-5 shadow-[0_1px_8px_rgba(0,0,0,0.06)]">
 
       {/* Overlay */}
-      {drawerOpen && <div onClick={() => { setDrawerOpen(false); resetForm(); }} style={{ position: 'fixed', inset: 0, zIndex: 1100, background: 'rgba(0,0,0,0.22)' }} />}
+      {drawerOpen && <div onClick={() => { setDrawerOpen(false); resetForm(); }} className="fixed inset-0 z-[1100] bg-black/22" />}
 
       {/* Slide-out Drawer */}
-      <div style={{ position: 'fixed', top: 0, right: 0, height: '100vh', width: '420px', transform: drawerOpen ? 'translateX(0)' : 'translateX(100%)', transition: 'transform 0.35s cubic-bezier(0.4,0,0.2,1)', background: '#fff', zIndex: 1200, display: 'flex', flexDirection: 'column', boxShadow: '-4px 0 24px rgba(0,0,0,0.12)' }}>
+      <div className={`fixed top-0 right-0 h-screen w-full sm:w-[420px] bg-white z-[1200] flex flex-col shadow-[-4px_0_24px_rgba(0,0,0,0.12)] transition-transform duration-350 ease-[cubic-bezier(0.4,0,0.2,1)] ${drawerOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         {/* Header */}
-        <div style={{ padding: '20px 20px 14px', borderBottom: '1px solid #f1f1f5' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div className="p-[20px_20px_14px] border-b border-[#f1f1f5]">
+          <div className="flex justify-between items-start">
             <div>
-              <h2 style={{ margin: '0 0 4px', fontSize: '17px', fontWeight: 700, color: '#1a1a2e' }}>Kurs qoshish</h2>
-              <p style={{ margin: 0, fontSize: '12.5px', color: '#9ca3af' }}>Bu yerda siz yangi Sovg'a qo'shishingiz mumkin.</p>
+              <h2 className="m-0 mb-1 text-[17px] font-bold text-[#1a1a2e]">Kurs qoshish</h2>
+              <p className="m-0 text-[12.5px] text-[#9ca3af]">Bu yerda siz yangi Sovg'a qo'shishingiz mumkin.</p>
             </div>
-            <button onClick={() => { setDrawerOpen(false); resetForm(); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', display: 'flex', padding: '2px' }}>
+            <button onClick={() => { setDrawerOpen(false); resetForm(); }} className="bg-none border-none cursor-pointer text-[#9ca3af] flex p-[2px]">
               <CloseOutlined fontSize="small" />
             </button>
           </div>
         </div>
 
         {/* Form */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
+        <div className="flex-1 overflow-y-auto p-5">
           {/* Nomi */}
-          <div style={{ marginBottom: '18px' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '7px' }}>Nomi</label>
+          <div className="mb-[18px]">
+            <label className="block text-[13px] font-semibold text-[#374151] mb-[7px]">Nomi</label>
             <input type="text" placeholder="HR Manager..." value={form.nomi} onChange={e => setForm({ ...form, nomi: e.target.value })}
-              style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1.5px solid #e5e7eb', fontSize: '13.5px', outline: 'none', boxSizing: 'border-box' }}
-              onFocus={e => (e.target.style.borderColor = '#7c4dff')} onBlur={e => (e.target.style.borderColor = '#e5e7eb')} />
+              className="w-full p-[10px_14px] rounded-[10px] border-[1.5px] border-[#e5e7eb] text-[13.5px] outline-none box-border focus:border-[#7c4dff]" />
           </div>
 
           {/* Filiallar */}
-          <div style={{ marginBottom: '18px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <label style={{ fontSize: '13px', fontWeight: 600, color: '#374151' }}>Kurs mavjud boledigon filiallar</label>
-              <button onClick={() => setForm({ ...form, filiallar: ['Filial 1', 'Filial 2'] })} style={{ background: 'none', border: 'none', color: '#7c4dff', fontSize: '12.5px', cursor: 'pointer', fontWeight: 600 }}>Hammasini tanlash</button>
+          <div className="mb-[18px]">
+            <div className="flex justify-between items-center mb-2">
+              <label className="text-[13px] font-semibold text-[#374151]">Kurs mavjud boledigon filiallar</label>
+              <button onClick={() => setForm({ ...form, filiallar: ['Filial 1', 'Filial 2'] })} className="bg-none border-none color-[#7c4dff] text-[12.5px] cursor-pointer font-semibold text-[#7c4dff]">Hammasini tanlash</button>
             </div>
             {['Filial 1', 'Filial 2'].map(f => (
-              <label key={f} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', cursor: 'pointer', fontSize: '13.5px', color: '#374151' }}>
+              <label key={f} className="flex items-center gap-2 mb-2 cursor-pointer text-[13.5px] text-[#374151]">
                 <input type="checkbox" checked={form.filiallar.includes(f)} onChange={() => toggleFilial(f)}
-                  style={{ accentColor: '#7c4dff', width: '16px', height: '16px', cursor: 'pointer' }} />
+                  className="accent-[#7c4dff] w-4 h-4 cursor-pointer" />
                 {f}
               </label>
             ))}
           </div>
 
           {/* Dars davomiyligi */}
-          <div style={{ marginBottom: '18px' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '7px' }}>Dars davomiyligi</label>
+          <div className="mb-[18px]">
+            <label className="block text-[13px] font-semibold text-[#374151] mb-[7px]">Dars davomiyligi</label>
             <select value={form.darsDavomiyligi} onChange={e => setForm({ ...form, darsDavomiyligi: e.target.value })}
-              style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1.5px solid #e5e7eb', fontSize: '13.5px', outline: 'none', background: '#fff', cursor: 'pointer', color: form.darsDavomiyligi ? '#1a1a2e' : '#9ca3af' }}>
+              className={`w-full p-[10px_14px] rounded-[10px] border-[1.5px] border-[#e5e7eb] text-[13.5px] outline-none bg-white cursor-pointer ${form.darsDavomiyligi ? 'text-[#1a1a2e]' : 'text-[#9ca3af]'}`}>
               <option value="">Tanlang</option>
               {darsDavomiyligi.map(d => <option key={d} value={d}>{d}</option>)}
             </select>
           </div>
 
           {/* Kurs davomiyligi */}
-          <div style={{ marginBottom: '18px' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '7px' }}>Kurs davomiyligi (oylarda)</label>
+          <div className="mb-[18px]">
+            <label className="block text-[13px] font-semibold text-[#374151] mb-[7px]">Kurs davomiyligi (oylarda)</label>
             <select value={form.kursDavomiyligi} onChange={e => setForm({ ...form, kursDavomiyligi: e.target.value })}
-              style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1.5px solid #e5e7eb', fontSize: '13.5px', outline: 'none', background: '#fff', cursor: 'pointer', color: form.kursDavomiyligi ? '#1a1a2e' : '#9ca3af' }}>
+              className={`w-full p-[10px_14px] rounded-[10px] border-[1.5px] border-[#e5e7eb] text-[13.5px] outline-none bg-white cursor-pointer ${form.kursDavomiyligi ? 'text-[#1a1a2e]' : 'text-[#9ca3af]'}`}>
               <option value="">Tanlang</option>
               {kursDavomlyligi.map(d => <option key={d} value={d}>{d}</option>)}
             </select>
           </div>
 
           {/* Narx */}
-          <div style={{ marginBottom: '18px' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '7px' }}>Narx</label>
-            <div style={{ position: 'relative' }}>
-              <CreditCardOutlined style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', fontSize: '18px', color: '#9ca3af' }} />
+          <div className="mb-[18px]">
+            <label className="block text-[13px] font-semibold text-[#374151] mb-[7px]">Narx</label>
+            <div className="relative">
+              <CreditCardOutlined className="absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-[#9ca3af]" />
               <input type="text" placeholder="Narxini kiriting" value={form.narx} onChange={e => setForm({ ...form, narx: e.target.value })}
-                style={{ width: '100%', padding: '10px 14px 10px 38px', borderRadius: '10px', border: '1.5px solid #e5e7eb', fontSize: '13.5px', outline: 'none', boxSizing: 'border-box' }}
-                onFocus={e => (e.target.style.borderColor = '#7c4dff')} onBlur={e => (e.target.style.borderColor = '#e5e7eb')} />
+                className="w-full p-[10px_14px_10px_38px] rounded-[10px] border-[1.5px] border-[#e5e7eb] text-[13.5px] outline-none box-border focus:border-[#7c4dff]" />
             </div>
           </div>
 
           {/* Description */}
-          <div style={{ marginBottom: '18px' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '7px' }}>Description</label>
+          <div className="mb-[18px]">
+            <label className="block text-[13px] font-semibold text-[#374151] mb-[7px]">Description</label>
             <textarea placeholder="A little about the company and the team that you'll be working with." value={form.description} onChange={e => setForm({ ...form, description: e.target.value })}
-              rows={4} style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1.5px solid #e5e7eb', fontSize: '13.5px', outline: 'none', resize: 'none', boxSizing: 'border-box', fontFamily: 'inherit' }}
-              onFocus={e => (e.target.style.borderColor = '#7c4dff')} onBlur={e => (e.target.style.borderColor = '#e5e7eb')} />
-            <p style={{ margin: '5px 0 0', fontSize: '12px', color: '#9ca3af' }}>This is a hint text to help user.</p>
+              rows={4} className="w-full p-[10px_14px] rounded-[10px] border-[1.5px] border-[#e5e7eb] text-[13.5px] outline-none resize-none box-border font-inherit focus:border-[#7c4dff]" />
+            <p className="m-0 mt-1.5 text-[12px] text-[#9ca3af]">This is a hint text to help user.</p>
           </div>
 
           {/* Rangi */}
-          <div style={{ marginBottom: '8px' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '4px' }}>Rangi</label>
-            <p style={{ margin: '0 0 10px', fontSize: '12px', color: '#9ca3af' }}>The color you choose will be displayed to users and in the list of roles.</p>
-            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          <div className="mb-2">
+            <label className="block text-[13px] font-semibold text-[#374151] mb-1">Rangi</label>
+            <p className="m-0 mb-2.5 text-[12px] text-[#9ca3af]">The color you choose will be displayed to users and in the list of roles.</p>
+            <div className="flex gap-2 flex-wrap">
               {rangli.map(c => (
                 <button key={c} onClick={() => setForm({ ...form, rangi: c })}
-                  style={{ width: '32px', height: '32px', borderRadius: '50%', background: c, border: form.rangi === c ? '3px solid #7c4dff' : '3px solid transparent', cursor: 'pointer', outline: form.rangi === c ? '2px solid #fff' : 'none', outlineOffset: '-5px', transition: 'all 0.15s' }} />
+                  className={`w-8 h-8 rounded-full cursor-pointer transition-all duration-150 ${form.rangi === c ? 'border-[3px] border-[#7c4dff] outline-[2px] outline-white -outline-offset-5' : 'border-[3px] border-transparent'}`}
+                  style={{ background: c }} />
               ))}
             </div>
           </div>
         </div>
 
         {/* Footer */}
-        <div style={{ padding: '14px 20px', borderTop: '1px solid #f1f1f5', display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+        <div className="p-[14px_20px] border-t border-[#f1f1f5] flex gap-2.5 justify-end">
           <button onClick={() => { setDrawerOpen(false); resetForm(); }}
-            style={{ padding: '10px 20px', borderRadius: '10px', border: '1.5px solid #e5e7eb', background: '#fff', color: '#6b7280', fontSize: '13.5px', fontWeight: 600, cursor: 'pointer' }}
-            onMouseEnter={e => (e.currentTarget.style.background = '#f5f5fb')} onMouseLeave={e => (e.currentTarget.style.background = '#fff')}>
+            className="p-[10px_20px] rounded-[10px] border-[1.5px] border-[#e5e7eb] bg-white text-[#6b7280] text-[13.5px] font-semibold cursor-pointer hover:bg-[#f5f5fb]">
             Bekor qilish
           </button>
           <button onClick={handleSave}
-            style={{ padding: '10px 24px', borderRadius: '10px', border: 'none', background: '#7c4dff', color: '#fff', fontSize: '13.5px', fontWeight: 600, cursor: 'pointer' }}
-            onMouseEnter={e => (e.currentTarget.style.opacity = '0.88')} onMouseLeave={e => (e.currentTarget.style.opacity = '1')}>
+            className="p-[10px_24px] rounded-[10px] border-none bg-[#7c4dff] text-white text-[13.5px] font-semibold cursor-pointer hover:opacity-90">
             Saqlash
           </button>
         </div>
       </div>
 
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-        <span style={{ fontWeight: 600, fontSize: '15px', color: '#1a1a2e' }}>Kurslar</span>
-        <button onClick={() => setDrawerOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: '6px', background: '#7c4dff', color: '#fff', border: 'none', borderRadius: '10px', padding: '8px 16px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>
+      <div className="flex justify-between items-center mb-4">
+        <span className="font-semibold text-[15px] text-[#1a1a2e]">Kurslar</span>
+        <button onClick={() => setDrawerOpen(true)} className="flex items-center gap-1.5 bg-[#7c4dff] text-white border-none rounded-[10px] p-[8px_16px] text-[13px] font-semibold cursor-pointer hover:opacity-90">
           <AddOutlined fontSize="small" /> Kurslar qo'shish
         </button>
       </div>
 
       {/* Filial tabs */}
-      <div style={{ display: 'flex', gap: '4px', marginBottom: '20px' }}>
+      <div className="flex gap-1 mb-5">
         {filialTabs.map((tab, i) => (
-          <button key={i} onClick={() => setActiveFilial(i)} style={{ padding: '7px 16px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: activeFilial === i ? 600 : 400, background: activeFilial === i ? '#f0ebff' : '#f5f5fb', color: activeFilial === i ? '#7c4dff' : '#6b7280', transition: 'all 0.15s' }}>
+          <button key={i} onClick={() => setActiveFilial(i)} className={`p-[7px_16px] border-none rounded-[8px] cursor-pointer text-[13px] transition-all duration-150 ${activeFilial === i ? 'font-semibold bg-[#f0ebff] text-[#7c4dff]' : 'font-normal bg-[#f5f5fb] text-[#6b7280]'}`}>
             {tab}
           </button>
         ))}
       </div>
 
       {/* Course cards grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
         {courses.map((card, i) => (
-          <div key={i} style={{ background: card.bg, border: `1px solid ${card.border}`, borderRadius: '12px', padding: '14px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '6px' }}>
-              <span style={{ fontWeight: 600, fontSize: '13px', color: '#1a1a2e', lineHeight: 1.4 }}>{card.title}</span>
-              <div style={{ display: 'flex', gap: '4px', flexShrink: 0, marginLeft: '6px' }}>
-                <button onClick={() => setCourses(prev => prev.filter((_, idx) => idx !== i))} style={{ background: 'rgba(255,255,255,0.85)', border: 'none', borderRadius: '6px', padding: '4px', cursor: 'pointer', color: '#ef5350', display: 'flex' }}>
+          <div key={i} className="rounded-[12px] p-3.5 border" style={{ background: card.bg, borderColor: card.border }}>
+            <div className="flex justify-between items-start mb-1.5">
+              <span className="font-semibold text-[13px] text-[#1a1a2e] leading-[1.4]">{card.title}</span>
+              <div className="flex gap-1 shrink-0 ml-1.5">
+                <button onClick={() => setCourses(prev => prev.filter((_, idx) => idx !== i))} className="bg-white/85 border-none rounded-[6px] p-1 cursor-pointer text-[#ef5350] flex">
                   <DeleteOutlineOutlined style={{ fontSize: '14px' }} />
                 </button>
-                <button style={{ background: 'rgba(255,255,255,0.85)', border: 'none', borderRadius: '6px', padding: '4px', cursor: 'pointer', color: '#7c4dff', display: 'flex' }}>
+                <button className="bg-white/85 border-none rounded-[6px] p-1 cursor-pointer text-[#7c4dff] flex">
                   <EditOutlined style={{ fontSize: '14px' }} />
                 </button>
               </div>
             </div>
-            <p style={{ fontSize: '11.5px', color: '#6b7280', margin: '0 0 10px 0', lineHeight: 1.5 }}>{card.desc}</p>
-            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+            <p className="text-[11.5px] text-[#6b7280] m-0 mb-2.5 leading-[1.5]">{card.desc}</p>
+            <div className="flex gap-1.5 flex-wrap">
               {[card.duration, card.period, card.price].map((info, j) => (
-                <span key={j} style={{ fontSize: '11px', color: '#374151', fontWeight: 500, background: 'rgba(255,255,255,0.75)', borderRadius: '6px', padding: '2px 7px' }}>{info}</span>
+                <span key={j} className="text-[11px] text-[#374151] font-medium bg-white/75 rounded-[6px] p-[2px_7px]">{info}</span>
               ))}
             </div>
           </div>
@@ -296,124 +292,106 @@ const XonalarContent = () => {
   };
 
   return (
-    <div style={{ background: '#fff', borderRadius: '16px', padding: '20px', boxShadow: '0 1px 8px rgba(0,0,0,0.06)', position: 'relative' }}>
+    <div className="bg-white rounded-[16px] p-5 shadow-[0_1px_8px_rgba(0,0,0,0.06)] relative">
 
       {/* Right-side drawer overlay */}
       {drawerOpen && (
         <div onClick={() => setDrawerOpen(false)}
-          style={{ position: 'fixed', inset: 0, zIndex: 1100, background: 'rgba(0,0,0,0.18)' }} />
+          className="fixed inset-0 z-[1100] bg-black/18" />
       )}
 
       {/* Drawer panel — slides from right */}
-      <div style={{
-        position: 'fixed', top: 0, right: 0, height: '100vh',
-        width: '360px',
-        transform: drawerOpen ? 'translateX(0)' : 'translateX(100%)',
-        transition: 'transform 0.35s cubic-bezier(0.4,0,0.2,1)',
-        background: '#fff', zIndex: 1200,
-        display: 'flex', flexDirection: 'column',
-        boxShadow: '-4px 0 24px rgba(0,0,0,0.10)',
-      }}>
+      <div className={`fixed top-0 right-0 h-screen w-full sm:w-[360px] bg-white z-[1200] flex flex-col shadow-[-4px_0_24px_rgba(0,0,0,0.10)] transition-transform duration-350 ease-[cubic-bezier(0.4,0,0.2,1)] ${drawerOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         {/* Drawer header */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '20px 20px 16px 16px', borderBottom: '1px solid #f1f1f5' }}>
+        <div className="flex items-center gap-2.5 p-[20px_20px_16px_16px] border-b border-[#f1f1f5]">
           <button onClick={() => setDrawerOpen(false)}
-            style={{ width: '30px', height: '30px', borderRadius: '8px', border: 'none', background: '#f5f5fb', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#7c4dff', flexShrink: 0, transition: 'background 0.2s' }}
-            onMouseEnter={e => (e.currentTarget.style.background = '#ede9ff')}
-            onMouseLeave={e => (e.currentTarget.style.background = '#f5f5fb')}>
+            className="w-[30px] h-[30px] rounded-[8px] border-none bg-[#f5f5fb] cursor-pointer flex items-center justify-center text-[#7c4dff] shrink-0 transition-colors duration-200 hover:bg-[#ede9ff]">
             <ChevronRightOutlined fontSize="small" />
           </button>
-          <span style={{ fontWeight: 700, fontSize: '16px', color: '#1a1a2e' }}>
+          <span className="font-bold text-[16px] text-[#1a1a2e]">
             {editIndex !== null ? "Xonani tahrirlash" : "Xonani qo'shish"}
           </span>
         </div>
 
         {/* Drawer form */}
-        <div style={{ flex: 1, padding: '24px 20px', overflowY: 'auto' }}>
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '8px' }}>
-              Nomi <span style={{ color: '#ef5350' }}>*</span>
+        <div className="flex-1 p-[24px_20px] overflow-y-auto">
+          <div className="mb-5">
+            <label className="block text-[13px] font-semibold text-[#374151] mb-2">
+              Nomi <span className="text-[#ef5350]">*</span>
             </label>
             <input
               type="text"
               placeholder="Xona nomi"
               value={form.nomi}
               onChange={e => setForm({ ...form, nomi: e.target.value })}
-              style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1.5px solid #e5e7eb', fontSize: '13.5px', color: '#1a1a2e', outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.2s' }}
-              onFocus={e => (e.target.style.borderColor = '#7c4dff')}
-              onBlur={e => (e.target.style.borderColor = '#e5e7eb')}
+              className="w-full p-[10px_14px] rounded-[10px] border-[1.5px] border-[#e5e7eb] text-[13.5px] text-[#1a1a2e] outline-none box-border transition-colors duration-200 focus:border-[#7c4dff]"
             />
           </div>
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '8px' }}>
-              Sig'imi <span style={{ color: '#ef5350' }}>*</span>
+          <div className="mb-5">
+            <label className="block text-[13px] font-semibold text-[#374151] mb-2">
+              Sig'imi <span className="text-[#ef5350]">*</span>
             </label>
             <input
               type="number"
               placeholder="Masalan: 20"
               value={form.sigimi}
               onChange={e => setForm({ ...form, sigimi: e.target.value })}
-              style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1.5px solid #e5e7eb', fontSize: '13.5px', color: '#1a1a2e', outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.2s' }}
-              onFocus={e => (e.target.style.borderColor = '#7c4dff')}
-              onBlur={e => (e.target.style.borderColor = '#e5e7eb')}
+              className="w-full p-[10px_14px] rounded-[10px] border-[1.5px] border-[#e5e7eb] text-[13.5px] text-[#1a1a2e] outline-none box-border transition-colors duration-200 focus:border-[#7c4dff]"
             />
           </div>
         </div>
 
         {/* Drawer footer */}
-        <div style={{ padding: '16px 20px', borderTop: '1px solid #f1f1f5', display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+        <div className="p-[16px_20px] border-t border-[#f1f1f5] flex gap-2.5 justify-end">
           <button onClick={() => { setDrawerOpen(false); setForm({ nomi: '', sigimi: '' }); }}
-            style={{ padding: '10px 20px', borderRadius: '10px', border: '1.5px solid #e5e7eb', background: '#fff', color: '#6b7280', fontSize: '13.5px', fontWeight: 600, cursor: 'pointer', transition: 'background 0.2s' }}
-            onMouseEnter={e => (e.currentTarget.style.background = '#f5f5fb')}
-            onMouseLeave={e => (e.currentTarget.style.background = '#fff')}>
+            className="p-[10px_20px] rounded-[10px] border-[1.5px] border-[#e5e7eb] bg-white text-[#6b7280] text-[13.5px] font-semibold cursor-pointer transition-colors duration-200 hover:bg-[#f5f5fb]">
             Bekor qilish
           </button>
           <button
             onClick={handleSave}
-            style={{ padding: '10px 24px', borderRadius: '10px', border: 'none', background: '#7c4dff', color: '#fff', fontSize: '13.5px', fontWeight: 600, cursor: 'pointer', transition: 'opacity 0.2s' }}
-            onMouseEnter={e => (e.currentTarget.style.opacity = '0.88')}
-            onMouseLeave={e => (e.currentTarget.style.opacity = '1')}>
+            className="p-[10px_24px] rounded-[10px] border-none bg-[#7c4dff] text-white text-[13.5px] font-semibold cursor-pointer transition-opacity duration-200 hover:opacity-90">
             Saqlash
           </button>
         </div>
       </div>
 
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontWeight: 600, fontSize: '15px', color: '#1a1a2e' }}>Xonalar</span>
-          <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', display: 'flex', alignItems: 'center', padding: '2px' }}>
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex items-center gap-2">
+          <span className="font-semibold text-[15px] text-[#1a1a2e]">Xonalar</span>
+          <button className="bg-none border-none cursor-pointer text-[#9ca3af] flex items-center p-0.5">
             <RefreshOutlined style={{ fontSize: '16px' }} />
           </button>
         </div>
         <button onClick={openAdd}
-          style={{ display: 'flex', alignItems: 'center', gap: '6px', background: '#7c4dff', color: '#fff', border: 'none', borderRadius: '10px', padding: '8px 16px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>
+          className="flex items-center gap-1.5 bg-[#7c4dff] text-white border-none rounded-[10px] p-[8px_16px] text-[13px] font-semibold cursor-pointer hover:opacity-90">
           <AddOutlined fontSize="small" /> Xonani qo'shish
         </button>
       </div>
 
       {/* Filial tabs */}
-      <div style={{ display: 'flex', gap: '6px', marginBottom: '20px', flexWrap: 'wrap' }}>
+      <div className="flex gap-1.5 mb-5 flex-wrap">
         {xonalarFilialTabs.map((tab, i) => (
-          <button key={i} onClick={() => setActiveFilial(i)} style={{ padding: '6px 14px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '12.5px', fontWeight: activeFilial === i ? 600 : 400, background: activeFilial === i ? '#f0ebff' : '#f5f5fb', color: activeFilial === i ? '#7c4dff' : '#6b7280', transition: 'all 0.15s' }}>
+          <button key={i} onClick={() => setActiveFilial(i)} className={`p-[6px_14px] border-none rounded-[8px] cursor-pointer text-[12.5px] transition-all duration-150 ${activeFilial === i ? 'font-semibold bg-[#f0ebff] text-[#7c4dff]' : 'font-normal bg-[#f5f5fb] text-[#6b7280]'}`}>
             {tab}
           </button>
         ))}
       </div>
 
       {/* Rooms grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
         {rooms.map((room, i) => (
-          <div key={i} style={{ background: '#fafafa', border: '1px solid #f1f1f5', borderRadius: '10px', padding: '14px 14px 12px 14px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <div key={i} className="bg-[#fafafa] border border-[#f1f1f5] rounded-[10px] p-[14px_14px_12px_14px]">
+            <div className="flex justify-between items-start">
               <div>
-                <p style={{ margin: '0 0 4px 0', fontWeight: 600, fontSize: '13px', color: '#1a1a2e' }}>{room.name}</p>
-                <p style={{ margin: 0, fontSize: '12px', color: '#9ca3af' }}>Sig'imi: {room.capacity}</p>
+                <p className="m-0 mb-1 font-semibold text-[13px] text-[#1a1a2e]">{room.name}</p>
+                <p className="m-0 text-[12px] text-[#9ca3af]">Sig'imi: {room.capacity}</p>
               </div>
-              <div style={{ display: 'flex', gap: '4px', flexShrink: 0 }}>
-                <button onClick={() => handleDelete(i)} style={{ background: '#fff', border: 'none', borderRadius: '6px', padding: '4px', cursor: 'pointer', color: '#ef5350', display: 'flex', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
+              <div className="flex gap-1 shrink-0">
+                <button onClick={() => handleDelete(i)} className="bg-white border-none rounded-[6px] p-1 cursor-pointer text-[#ef5350] flex shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
                   <DeleteOutlineOutlined style={{ fontSize: '14px' }} />
                 </button>
-                <button onClick={() => openEdit(i)} style={{ background: '#fff', border: 'none', borderRadius: '6px', padding: '4px', cursor: 'pointer', color: '#7c4dff', display: 'flex', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
+                <button onClick={() => openEdit(i)} className="bg-white border-none rounded-[6px] p-1 cursor-pointer text-[#7c4dff] flex shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
                   <EditOutlined style={{ fontSize: '14px' }} />
                 </button>
               </div>
@@ -431,32 +409,27 @@ const Management = () => {
   const [activeItem, setActiveItem] = useState(0);
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div className="relative">
 
       {/* Fixed full-height sliding panel */}
-      <div style={{
-        position: 'fixed', top: 0, left: `${SIDEBAR_W}px`,
-        height: '100vh', width: open ? `${PANEL_W}px` : '0px',
-        overflow: 'hidden', transition: 'width 0.35s cubic-bezier(0.4,0,0.2,1)',
-        zIndex: 1000, boxShadow: open ? '4px 0 24px rgba(124,77,255,0.10)' : 'none',
-      }}>
-        <div style={{ width: `${PANEL_W}px`, height: '100%', background: '#fff', borderRight: '1px solid #f1f1f5', display: 'flex', flexDirection: 'column' }}>
+      <div className={`fixed top-0 h-screen overflow-hidden transition-all duration-350 ease-[cubic-bezier(0.4,0,0.2,1)] z-[1000] 
+        ${open ? 'w-[220px] border-r shadow-[4px_0_24px_rgba(124,77,255,0.10)]' : 'w-0 shadow-none'}
+        lg:left-[256px] left-0`}
+      >
+        <div className="w-[220px] h-full bg-white border-r border-[#f1f1f5] flex flex-col">
           {/* Panel header */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 16px 14px 16px', borderBottom: '1px solid #f1f1f5' }}>
-            <span style={{ fontWeight: 700, fontSize: '15px', color: '#1a1a2e' }}>Menu</span>
-            <button onClick={() => setOpen(false)} style={{ width: '28px', height: '28px', borderRadius: '8px', border: 'none', background: '#f5f5fb', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#7c4dff', transition: 'background 0.2s' }}
-              onMouseEnter={e => (e.currentTarget.style.background = '#ede9ff')}
-              onMouseLeave={e => (e.currentTarget.style.background = '#f5f5fb')}>
+          <div className="flex items-center justify-between p-[20px_16px_14px_16px] border-b border-[#f1f1f5]">
+            <span className="font-bold text-[15px] text-[#1a1a2e]">Menu</span>
+            <button onClick={() => setOpen(false)} className="w-7 h-7 rounded-[8px] border-none bg-[#f5f5fb] cursor-pointer flex items-center justify-center text-[#7c4dff] transition-colors duration-200 hover:bg-[#ede9ff]">
               <ChevronLeftOutlined fontSize="small" />
             </button>
           </div>
           {/* Menu items */}
-          <nav style={{ padding: '10px', flex: 1, overflowY: 'auto' }}>
+          <nav className="p-2.5 flex-1 overflow-y-auto">
             {menuItems.map((item, idx) => (
-              <button key={idx} onClick={() => setActiveItem(idx)} style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '10px 12px', borderRadius: '10px', border: 'none', cursor: 'pointer', background: activeItem === idx ? '#ede9ff' : 'transparent', color: activeItem === idx ? '#7c4dff' : '#6b7280', fontWeight: activeItem === idx ? 600 : 500, fontSize: '13.5px', textAlign: 'left', marginBottom: '2px', transition: 'background 0.18s, color 0.18s', whiteSpace: 'nowrap' }}
-                onMouseEnter={e => { if (activeItem !== idx) { e.currentTarget.style.background = '#f5f5fb'; e.currentTarget.style.color = '#7c4dff'; } }}
-                onMouseLeave={e => { if (activeItem !== idx) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#6b7280'; } }}>
-                <span style={{ color: activeItem === idx ? '#7c4dff' : '#9ca3af', display: 'flex', alignItems: 'center' }}>{item.icon}</span>
+              <button key={idx} onClick={() => setActiveItem(idx)} 
+                className={`flex items-center gap-2.5 w-full p-[10px_12px] rounded-[10px] border-none cursor-pointer font-medium text-[13.5px] text-left mb-0.5 transition-all duration-180 whitespace-nowrap ${activeItem === idx ? 'bg-[#ede9ff] text-[#7c4dff] font-semibold' : 'bg-transparent text-[#6b7280] hover:bg-[#f5f5fb] hover:text-[#7c4dff]'}`}>
+                <span className={`flex items-center ${activeItem === idx ? 'text-[#7c4dff]' : 'text-[#9ca3af]'}`}>{item.icon}</span>
                 {item.label}
               </button>
             ))}
@@ -467,25 +440,23 @@ const Management = () => {
       {/* Toggle button (visible when panel closed) */}
       {!open && (
         <button onClick={() => setOpen(true)}
-          style={{ position: 'fixed', top: '12px', left: `${SIDEBAR_W + 12}px`, zIndex: 1001, width: '32px', height: '32px', borderRadius: '8px', border: 'none', background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#7c4dff', boxShadow: '0 1px 8px rgba(124,77,255,0.13)', transition: 'background 0.2s' }}
-          onMouseEnter={e => (e.currentTarget.style.background = '#ede9ff')}
-          onMouseLeave={e => (e.currentTarget.style.background = '#fff')}
+          className="fixed top-20 lg:top-3 z-[1001] w-8 h-8 rounded-[8px] border-none bg-white cursor-pointer flex items-center justify-center text-[#7c4dff] shadow-[0_1px_8px_rgba(124,77,255,0.13)] transition-colors duration-200 hover:bg-[#ede9ff] lg:left-[268px] left-3"
           title="Menyuni ochish">
           <ChevronRightOutlined fontSize="small" />
         </button>
       )}
 
       {/* Main content — shifts right when panel is open */}
-      <div style={{ marginLeft: open ? `${PANEL_W}px` : '0px', transition: 'margin-left 0.35s cubic-bezier(0.4,0,0.2,1)', padding: '4px 0' }}>
-        <h1 style={{ fontSize: '24px', fontWeight: 700, color: '#1a1a2e', margin: '0 0 6px 0' }}>Boshqarish</h1>
-        <p style={{ fontSize: '13.5px', color: '#6b7280', margin: '0 0 20px 0', lineHeight: 1.6 }}>
+      <div className={`transition-all duration-350 ease-[cubic-bezier(0.4,0,0.2,1)] py-1 ${open ? 'lg:ml-[220px] ml-0 opacity-40 lg:opacity-100' : 'ml-0'}`}>
+        <h1 className="text-[24px] font-bold text-[#1a1a2e] m-0 mb-1.5">Boshqarish</h1>
+        <p className="text-[13.5px] text-[#6b7280] m-0 mb-5 leading-[1.6]">
           Ushbu sahifada siz sovg'alarni boshqarish imkoniyatiga ega bo'lasiz. Har bir sovg'a haqida batafsil ma'lumot va yangi sovg'a qo'shish imkoniyat bor.
         </p>
 
         {/* Horizontal tabs — panel bilan sinxron */}
-        <div style={{ display: 'flex', borderBottom: '2px solid #f1f1f5', marginBottom: '20px', overflowX: 'auto' }}>
+        <div className="flex border-b-2 border-[#f1f1f5] mb-5 overflow-x-auto">
           {menuItems.map((item, i) => (
-            <button key={i} onClick={() => setActiveItem(i)} style={{ padding: '10px 16px', border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '13.5px', fontWeight: activeItem === i ? 600 : 400, color: activeItem === i ? '#7c4dff' : '#6b7280', borderBottom: activeItem === i ? '2px solid #7c4dff' : '2px solid transparent', marginBottom: '-2px', whiteSpace: 'nowrap', transition: 'color 0.18s, border-color 0.18s' }}>
+            <button key={i} onClick={() => setActiveItem(i)} className={`p-[10px_16px] border-none bg-transparent cursor-pointer text-[13.5px] transition-all duration-180 mb-[-2px] whitespace-nowrap ${activeItem === i ? 'font-semibold text-[#7c4dff] border-b-2 border-[#7c4dff]' : 'font-normal text-[#6b7280] border-b-2 border-transparent'}`}>
               {item.label}
             </button>
           ))}
@@ -496,7 +467,7 @@ const Management = () => {
         ) : activeItem === 1 ? (
           <XonalarContent />
         ) : (
-          <div style={{ background: '#fff', borderRadius: '16px', padding: '32px', boxShadow: '0 1px 8px rgba(0,0,0,0.06)', color: '#9ca3af', textAlign: 'center', fontSize: '14px' }}>
+          <div className="bg-white rounded-[16px] p-8 shadow-[0_1px_8px_rgba(0,0,0,0.06)] text-[#9ca3af] text-center text-[14px]">
             {menuItems[activeItem].label} bo'limi tez orada qo'shiladi.
           </div>
         )}
