@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowBackOutlined,
@@ -43,7 +43,6 @@ const plans = [
       '200 tagacha talaba',
       'Kurslar boshqaruvi',
       'Hodimlar va rollar',
-      'Coin tizimi',
       'Kengaytirilgan hisobotlar',
       'SMS xabar yuborish',
       "Ustuvor qo'llab-quvvatlash",
@@ -77,7 +76,7 @@ const Subscription = () => {
   const [selected, setSelected] = useState(null);
 
   return (
-    <div className="min-h-screen bg-[#f8f9fe] p-0">
+    <div className="min-h-screen bg-[#f1f5f9] p-0">
       {/* Header */}
       <div className="bg-white border-b border-[#f1f1f5] p-[16px_32px] flex items-center gap-4">
         <button

@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
   Search, 
   NotificationsNone, 
   DarkModeOutlined, 
-  ArrowBackIosNew,
+  ChevronLeftOutlined,
+  ChevronRightOutlined,
   LogoutOutlined,
   Menu
 } from '@mui/icons-material';
 import { Switch, Select, MenuItem, FormControl } from '@mui/material';
 
-const Header = ({ onMenuClick }) => {
+const Header = ({ onMenuClick, isDesktopSidebarOpen, toggleDesktopSidebar }) => {
   const [lang, setLang] = useState('uzb');
   const { logout } = useAuth();
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const Header = ({ onMenuClick }) => {
   };
 
   return (
-    <header className="h-16 flex items-center justify-between px-4 lg:px-6 bg-[#f8f9fe]">
+    <header className="h-16 flex items-center justify-between px-4 lg:px-6 bg-[#f1f5f9]">
       <div className="flex items-center gap-2 lg:gap-4 flex-1">
         <button 
           onClick={onMenuClick}
@@ -31,8 +32,11 @@ const Header = ({ onMenuClick }) => {
           <Menu />
         </button>
         
-        <button className="hidden sm:flex w-8 h-8 items-center justify-center bg-white rounded-lg shadow-sm text-gray-400 shrink-0">
-           <ArrowBackIosNew fontSize="small" className="scale-75" />
+        <button 
+          onClick={toggleDesktopSidebar}
+          className="hidden lg:flex w-8 h-8 items-center justify-center bg-white rounded-lg shadow-sm text-gray-400 shrink-0 hover:bg-gray-50 cursor-pointer transition-colors"
+        >
+           {isDesktopSidebarOpen ? <ChevronLeftOutlined fontSize="small" className="scale-75" /> : <ChevronRightOutlined fontSize="small" className="scale-75" />}
         </button>
         <div className="relative group max-w-xs w-full sm:w-64">
           <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-gray-400">

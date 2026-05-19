@@ -1,33 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   AddOutlined, DeleteOutlineOutlined, EditOutlined,
   SearchOutlined, FileDownloadOutlined,
   FilterListOutlined, ArchiveOutlined, CloseOutlined,
   ChevronLeftOutlined, ChevronRightOutlined, RefreshOutlined,
-  AddCircleOutlineOutlined, RemoveCircleOutlineOutlined,
   EmailOutlined, CalendarTodayOutlined, CloudUploadOutlined,
 } from '@mui/icons-material';
 
 const LABELS_COLORS = ['#e8f0fe', '#fce8f3', '#fff3e0', '#e8f5e9', '#f3e5f5'];
 const LABELS_TEXT = ['#1565c0', '#c2185b', '#e65100', '#2e7d32', '#6a1b9a'];
 
-const initialTeachers = Array.from({ length: 5 }, (_, i) => ({
-  id: i + 1,
-  name: 'Qwerty qwert',
-  avatar: null,
-  guruh: '',
-  phone: '+998(33)4082808',
-  born: '24 Jan 2022',
-  created: '24 Jan 2022',
-  coin: 123123,
-  labels: i % 4 === 0 ? ['Label', 'Label', 'Label', 'Label', 'LabelExtra', 'LabelFull']
-        : i % 3 === 0 ? ['Label', 'Label', 'Label']
-        : i % 2 === 0 ? ['Label', 'Label']
-        : ['Label'],
-  selected: i === 0 || i === 1 || i === 4,
-}));
-
-const COLS = ['Nomi', 'Guruh', 'Telefon raqamlari', "Tug'ilgan sanasi", 'Yaratilgan sana', 'Coin', ''];
+const COLS = ['Nomi', 'Guruh', 'Telefon raqamlari', "Tug'ilgan sanasi", 'Yaratilgan sana', ''];
 
 const LabelBadge = ({ text, idx }) => (
   <span 
@@ -48,10 +31,8 @@ const Avatar = ({ name }) => (
 );
 
 const Teachers = () => {
-  const [teachers, setTeachers] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('teachers')) || initialTeachers; }
-    catch { return initialTeachers; }
-  });
+  const [teachers, setTeachers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [editId, setEditId] = useState(null);
@@ -64,10 +45,60 @@ const Teachers = () => {
   const [showArchived, setShowArchived] = useState(false);
   const fileInputRef = useRef(null);
 
+  // Fetch teachers from API
   useEffect(() => {
-    localStorage.setItem('teachers', JSON.stringify(teachers));
+    const fetchTeachers = async () => {
+      try {
+        const token = localStorage.getItem('accessToken');
+        const res = await fetch('https://najot-edu.softwareengineer.uz/api/v1/users/admin', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (res.status === 401) {
+          localStorage.removeItem('isLogged');
+          localStorage.removeItem('accessToken');
+          window.location.reload();
+          return;
+        }
+        if (res.ok) {
+          const data = await res.json();
+          console.log('Teachers fetch success:', data);
+          const list = Array.isArray(data) ? data : (data.data || data.users || data.admins || []);
+          const mapped = list.map((u, i) => ({
+            id: u.id || u._id || i + 1,
+            name: `${u.first_name || ''} ${u.last_name || ''}`.trim() || u.name || u.fullName || '',
+            avatar: u.avatar || u.image || null,
+            guruh: u.group || u.address || u.guruh || '',
+            phone: u.phone || '',
+            email: u.email || '',
+            born: u.birth_date || u.birthDate || u.born || '',
+            created: u.createdAt || u.created_at
+              ? new Date(u.createdAt || u.created_at).toLocaleDateString('ru-RU')
+              : '',
+            coin: u.coin || 0,
+            labels: u.labels || [],
+            jinsi: u.gender || '',
+            selected: false,
+            archived: false,
+          }));
+          setTeachers(mapped);
+          localStorage.setItem('teachersCount', mapped.length);
+        } else {
+          console.error('Teachers fetch failed with status:', res.status);
+        }
+      } catch (e) {
+        console.error('Teachers fetch error:', e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTeachers();
+  }, []);
+
+  // Sync count to localStorage when teachers change
+  useEffect(() => {
     localStorage.setItem('teachersCount', teachers.filter(t => !t.archived).length);
   }, [teachers]);
+
   const PER_PAGE = 10;
 
   const filtered = teachers.filter(t => {
@@ -87,8 +118,7 @@ const Teachers = () => {
     const allSelected = paginated.every(t => t.selected);
     setTeachers(prev => prev.map(t => paginated.find(p => p.id === t.id) ? { ...t, selected: !allSelected } : t));
   };
-  const changeCoin = (id, delta) =>
-    setTeachers(prev => prev.map(t => t.id === id ? { ...t, coin: Math.max(0, t.coin + delta) } : t));
+
   const deleteSelected = () =>
     setTeachers(prev => prev.filter(t => !t.selected));
   const deleteOne = (id) =>
@@ -97,8 +127,8 @@ const Teachers = () => {
     setTeachers(prev => prev.map(t => t.id === id ? { ...t, archived: !t.archived } : t));
 
   const exportCSV = (list) => {
-    const header = ['Ismi', 'Guruh', 'Telefon', "Tug'ilgan sana", 'Yaratilgan sana', 'Coin'];
-    const rows = list.map(t => [t.name, t.guruh || '', t.phone, t.born, t.created, t.coin]);
+    const header = ['Ismi', 'Guruh', 'Telefon', "Tug'ilgan sana", 'Yaratilgan sana'];
+    const rows = list.map(t => [t.name, t.guruh || '', t.phone, t.born, t.created]);
     const csv = [header, ...rows].map(r => r.join(',')).join('\n');
     const a = document.createElement('a');
     a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
@@ -118,27 +148,79 @@ const Teachers = () => {
     setDrawerOpen(true);
   };
 
-  const resetForm = () => { setForm({ phone: '+998', email: '', name: '', born: '', guruhlar: [], jinsi: '', avatarName: '' }); setGuruhSearch(''); setShowParol(false); };
-  const handleSave = () => {
+  const resetForm = () => { setForm({ phone: '+998', email: '', name: '', born: '', guruhlar: [], jinsi: '', avatarName: '', parol: '' }); setGuruhSearch(''); setShowParol(false); };
+  const handleSave = async () => {
     if (!form.name.trim()) return;
     if (editId !== null) {
+      // Edit — local update (PUT endpoint yo'q hozircha)
       setTeachers(prev => prev.map(t => t.id === editId ? {
         ...t, name: form.name.trim(), phone: form.phone, born: form.born, email: form.email,
         guruh: form.guruhlar[0] || '', labels: form.guruhlar, jinsi: form.jinsi,
       } : t));
     } else {
-      const newT = {
-        id: Date.now(), name: form.name.trim(), avatar: null, email: form.email,
-        guruh: form.guruhlar[0] || '', phone: form.phone, born: form.born, jinsi: form.jinsi,
-        created: new Date().toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' }),
-        coin: 0, labels: form.guruhlar, selected: false, archived: false,
-      };
-      setTeachers(prev => [newT, ...prev]);
+      // Yangi o'qituvchi — POST API ga yuboriladi
+      try {
+        const token = localStorage.getItem('accessToken');
+        const nameParts = form.name.trim().split(' ');
+        const res = await fetch('https://najot-edu.softwareengineer.uz/api/v1/users/admin', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            first_name: nameParts[0] || '',
+            last_name: nameParts.slice(1).join(' ') || '',
+            password: form.parol || '',
+            phone: form.phone,
+            email: form.email,
+            address: form.guruhlar[0] || '',
+          }),
+        });
+        if (res.ok) {
+          const saved = await res.json();
+          const newT = {
+            id: saved.id || saved._id || Date.now(),
+
+            name: form.name.trim(),
+            avatar: null,
+            email: form.email,
+            guruh: form.guruhlar[0] || '',
+            phone: form.phone,
+            born: form.born,
+            jinsi: form.jinsi,
+            created: new Date().toLocaleDateString('ru-RU'),
+            coin: 0,
+            labels: form.guruhlar,
+            selected: false,
+            archived: false,
+          };
+          setTeachers(prev => [newT, ...prev]);
+        } else {
+          let errMsg = 'Xatolik yuz berdi!';
+          if (res.status === 409) {
+            errMsg = 'Bu telefon raqam yoki email allaqachon mavjud!';
+          } else {
+            try {
+              const err = await res.json();
+              errMsg = err.message || err.error || JSON.stringify(err);
+            } catch {
+              errMsg = `Server xatosi: ${res.status}`;
+            }
+          }
+          alert(errMsg);
+          return;
+        }
+      } catch {
+        alert('Server bilan ulanishda xatolik!');
+        return;
+      }
     }
     setEditId(null);
     resetForm();
     setDrawerOpen(false);
   };
+
 
   const anySelected = teachers.some(t => t.selected);
   const allSelected = paginated.length > 0 && paginated.every(t => t.selected);
@@ -151,7 +233,7 @@ const Teachers = () => {
   };
 
   return (
-    <div className="p-[24px_28px] min-h-screen bg-[#f8f9fe]">
+    <div className="p-[24px_28px] bg-[#f1f5f9]">
 
       {/* Slide-out Add Drawer */}
       {drawerOpen && <div onClick={() => { setDrawerOpen(false); resetForm(); }} className="fixed inset-0 z-[1100] bg-black/20" />}
@@ -368,7 +450,17 @@ const Teachers = () => {
             </tr>
           </thead>
           <tbody>
-            {paginated.map((t, rowIdx) => {
+            {loading ? (
+              <tr><td colSpan={7} className="text-center py-14 text-[#9ca3af] text-[13px]">
+                <div className="flex items-center justify-center gap-2">
+                  <svg className="animate-spin h-4 w-4 text-[#7c4dff]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                  </svg>
+                  Ma'lumotlar yuklanmoqda...
+                </div>
+              </td></tr>
+            ) : paginated.map((t, rowIdx) => {
               const visibleLabels = t.labels.slice(0, 3);
               const extra = t.labels.length - 3;
               return (
@@ -393,19 +485,7 @@ const Teachers = () => {
                   <td className="p-2.5 text-[#374151]">{t.phone}</td>
                   <td className="p-2.5 text-[#6b7280]">{t.born}</td>
                   <td className="p-2.5 text-[#6b7280]">{t.created}</td>
-                  {/* Coin */}
-                  <td className="p-2.5">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-[13px] text-[#f59e0b]">●</span>
-                      <span className="font-bold text-[#1a1a2e] text-[13px]">{t.coin.toLocaleString()}</span>
-                      <button onClick={() => changeCoin(t.id, -100)} className="bg-none border-none cursor-pointer text-[#ef5350] flex p-[1px]">
-                        <RemoveCircleOutlineOutlined style={{ fontSize: '16px' }} />
-                      </button>
-                      <button onClick={() => changeCoin(t.id, 100)} className="bg-none border-none cursor-pointer text-[#22c55e] flex p-[1px]">
-                        <AddCircleOutlineOutlined style={{ fontSize: '16px' }} />
-                      </button>
-                    </div>
-                  </td>
+
                   {/* Actions */}
                   <td className="p-2.5">
                     <div className="flex gap-1 items-center">

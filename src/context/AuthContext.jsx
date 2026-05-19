@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react';
+import { createContext, useState, useContext } from 'react';
 
 const AuthContext = createContext();
 
@@ -7,18 +7,30 @@ export const AuthProvider = ({ children }) => {
     return localStorage.getItem('isLogged');
   });
 
-  const login = (username, password) => {
-    if (username === 'admin' && password === 'admin12345') {
-      localStorage.setItem('isLogged', 'true');
-      setUser('true');
-      return true;
-    } else {
-      return false;
+ 
+  const login = async (phone, password) => {
+    try {
+      const res = await fetch('https://najot-edu.softwareengineer.uz/api/v1/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, password }),
+      });
+      const data = await res.json();
+      if (res.ok && data.accessToken) {
+        localStorage.setItem('isLogged', 'true');
+        localStorage.setItem('accessToken', data.accessToken);
+        setUser('true');
+        return { ok: true };
+      }
+      return { ok: false, message: data.message || 'Telefon yoki parol xato!' };
+    } catch {
+      return { ok: false, message: 'Server bilan ulanishda xatolik!' };
     }
   };
 
   const logout = () => {
     localStorage.removeItem('isLogged');
+    localStorage.removeItem('accessToken');
     setUser(null);
   };
 
@@ -29,4 +41,5 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);

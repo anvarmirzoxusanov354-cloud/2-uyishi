@@ -1,15 +1,19 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useOutletContext } from 'react-router-dom';
+import Dashboard from './Dashboard';
 import {
   AddOutlined, DeleteOutlineOutlined, EditOutlined,
   SchoolOutlined, MeetingRoomOutlined, AccountBalanceOutlined,
   PeopleAltOutlined, ReportProblemOutlined, AdminPanelSettingsOutlined,
-  MonetizationOnOutlined, SendOutlined, HelpOutlineOutlined,
-  FactCheckOutlined, ChevronLeftOutlined, ChevronRightOutlined,
-  RefreshOutlined, CloseOutlined, CreditCardOutlined,
+  SendOutlined, HelpOutlineOutlined,
+  FactCheckOutlined,
+  RefreshOutlined, CloseOutlined, CreditCardOutlined, SearchOutlined,
+  ChevronRightOutlined,
+  ChevronLeftOutlined,
 } from '@mui/icons-material';
 
-const SIDEBAR_W = 256;
-const PANEL_W = 220;
+
+
 
 const menuItems = [
   { icon: <SchoolOutlined fontSize="small" />, label: 'Kurslar' },
@@ -17,7 +21,6 @@ const menuItems = [
   { icon: <AccountBalanceOutlined fontSize="small" />, label: 'Filiallar' },
   { icon: <PeopleAltOutlined fontSize="small" />, label: 'Hodimlar' },
   { icon: <AdminPanelSettingsOutlined fontSize="small" />, label: 'Rollar' },
-  { icon: <MonetizationOnOutlined fontSize="small" />, label: 'Coin' },
   { icon: <ReportProblemOutlined fontSize="small" />, label: 'Sabablar' },
   { icon: <SendOutlined fontSize="small" />, label: 'Xabar yuborish' },
   { icon: <HelpOutlineOutlined fontSize="small" />, label: 'FAQ' },
@@ -27,12 +30,12 @@ const menuItems = [
 const filialTabs = ['Filial 1', 'Filial 2', 'Arxiv'];
 
 const initialCourseCards = [
-  { title: 'Human Resources Manager', desc: "A little about the company and the team that you'll be working with. A li...", duration: '90 min', period: '3 oy', price: '1 000 000 mln', bg: '#e8f0fe', border: '#c5d7fb' },
-  { title: 'Human Resources Manager', desc: "A little about the company and the team that you'll be working with. A li...", duration: '90 min', period: '3 oy', price: '1 000 000 mln', bg: '#fce8f3', border: '#f5c6e4' },
-  { title: 'Human Resources Manager', desc: "A little about the company and the team that you'll be working with. A li...", duration: '90 min', period: '3 oy', price: '1 000 000 mln', bg: '#fff3e0', border: '#ffe0b2' },
-  { title: 'Human Resources Manager', desc: "A little about the company and the team that you'll be working with. A li...", duration: '90 min', period: '3 oy', price: '1 000 000 mln', bg: '#e8f5e9', border: '#c8e6c9' },
-  { title: 'Human Resources Manager', desc: "A little about the company and the team that you'll be working with. A li...", duration: '90 min', period: '3 oy', price: '1 000 000 mln', bg: '#e8f0fe', border: '#c5d7fb' },
-  { title: 'Human Resources Manager', desc: "A little about the company and the team that you'll be working with. A li...", duration: '90 min', period: '3 oy', price: '1 000 000 mln', bg: '#fce8f3', border: '#f5c6e4' },
+  { id: 1, title: 'Human Resources Manager', desc: "A little about the company and the team that you'll be working with. A li...", duration: '90 min', period: '3 oy', price: '1 000 000 mln', bg: '#e8f0fe', border: '#c5d7fb' },
+  { id: 2, title: 'Human Resources Manager', desc: "A little about the company and the team that you'll be working with. A li...", duration: '90 min', period: '3 oy', price: '1 000 000 mln', bg: '#fce8f3', border: '#f5c6e4' },
+  { id: 3, title: 'Human Resources Manager', desc: "A little about the company and the team that you'll be working with. A li...", duration: '90 min', period: '3 oy', price: '1 000 000 mln', bg: '#fff3e0', border: '#ffe0b2' },
+  { id: 4, title: 'Human Resources Manager', desc: "A little about the company and the team that you'll be working with. A li...", duration: '90 min', period: '3 oy', price: '1 000 000 mln', bg: '#e8f5e9', border: '#c8e6c9' },
+  { id: 5, title: 'Human Resources Manager', desc: "A little about the company and the team that you'll be working with. A li...", duration: '90 min', period: '3 oy', price: '1 000 000 mln', bg: '#e8f0fe', border: '#c5d7fb' },
+  { id: 6, title: 'Human Resources Manager', desc: "A little about the company and the team that you'll be working with. A li...", duration: '90 min', period: '3 oy', price: '1 000 000 mln', bg: '#fce8f3', border: '#f5c6e4' },
 ];
 
 const darsDavomiyligi = ['30 min', '45 min', '60 min', '90 min', '120 min'];
@@ -43,11 +46,17 @@ const borderColors = ['#c5d7fb','#f5c6e4','#ffe0b2','#c8e6c9','#b2ebf2','#fff9c4
 
 const KurslarContent = () => {
   const [activeFilial, setActiveFilial] = useState(0);
+  const [search, setSearch] = useState('');
   const [courses, setCourses] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('courses')) || initialCourseCards; }
+    try { 
+      const stored = JSON.parse(localStorage.getItem('courses'));
+      if (stored && Array.isArray(stored)) return stored.map((c, i) => ({ ...c, id: c.id || i + 1 }));
+      return initialCourseCards; 
+    }
     catch { return initialCourseCards; }
   });
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [editId, setEditId] = useState(null);
   const [form, setForm] = useState({
     nomi: '', filiallar: ['Filial 1', 'Filial 2'],
     darsDavomiyligi: '', kursDavomiyligi: '',
@@ -56,8 +65,7 @@ const KurslarContent = () => {
 
   const resetForm = () => setForm({ nomi: '', filiallar: ['Filial 1', 'Filial 2'], darsDavomiyligi: '', kursDavomiyligi: '', narx: '', description: '', rangi: rangli[1] });
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  React.useEffect(() => { localStorage.setItem('courses', JSON.stringify(courses)); }, [courses]);
+  useEffect(() => { localStorage.setItem('courses', JSON.stringify(courses)); }, [courses]);
 
   const toggleFilial = (f) => {
     setForm(prev => ({
@@ -66,21 +74,62 @@ const KurslarContent = () => {
     }));
   };
 
+  const openAdd = () => {
+    setEditId(null);
+    resetForm();
+    setDrawerOpen(true);
+  };
+
+  const openEdit = (course) => {
+    setEditId(course.id);
+    setForm({
+      nomi: course.title,
+      filiallar: ['Filial 1', 'Filial 2'],
+      darsDavomiyligi: course.duration,
+      kursDavomiyligi: course.period,
+      narx: course.price.replace(' mln', ''),
+      description: course.desc,
+      rangi: course.rangi || rangli[1],
+    });
+    setDrawerOpen(true);
+  };
+
+  const handleDelete = (id) => {
+    setCourses(prev => prev.filter(c => c.id !== id));
+  };
+
   const handleSave = () => {
     if (!form.nomi.trim()) return;
-    const idx = courses.length % bgColors.length;
-    setCourses(prev => [...prev, {
-      title: form.nomi.trim(),
-      desc: form.description || "A little about the company and the team that you'll be working with. A li...",
-      duration: form.darsDavomiyligi || '90 min',
-      period: form.kursDavomiyligi || '3 oy',
-      price: form.narx ? `${form.narx} mln` : '1 000 000 mln',
-      bg: bgColors[idx],
-      border: borderColors[idx],
-    }]);
+    if (editId !== null) {
+      setCourses(prev => prev.map(c => c.id === editId ? {
+        ...c,
+        title: form.nomi.trim(),
+        desc: form.description,
+        duration: form.darsDavomiyligi,
+        period: form.kursDavomiyligi,
+        price: form.narx ? `${form.narx} mln` : c.price,
+      } : c));
+    } else {
+      const idx = courses.length % bgColors.length;
+      setCourses(prev => [...prev, {
+        id: Date.now(),
+        title: form.nomi.trim(),
+        desc: form.description || "A little about the company and the team that you'll be working with. A li...",
+        duration: form.darsDavomiyligi || '90 min',
+        period: form.kursDavomiyligi || '3 oy',
+        price: form.narx ? `${form.narx} mln` : '1 000 000 mln',
+        bg: bgColors[idx],
+        border: borderColors[idx],
+      }]);
+    }
     resetForm();
     setDrawerOpen(false);
   };
+
+  const filteredCourses = courses.filter(c => 
+    c.title.toLowerCase().includes(search.toLowerCase()) || 
+    c.desc.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <div className="bg-white rounded-[16px] p-5 shadow-[0_1px_8px_rgba(0,0,0,0.06)]">
@@ -94,8 +143,8 @@ const KurslarContent = () => {
         <div className="p-[20px_20px_14px] border-b border-[#f1f1f5]">
           <div className="flex justify-between items-start">
             <div>
-              <h2 className="m-0 mb-1 text-[17px] font-bold text-[#1a1a2e]">Kurs qoshish</h2>
-              <p className="m-0 text-[12.5px] text-[#9ca3af]">Bu yerda siz yangi Sovg'a qo'shishingiz mumkin.</p>
+              <h2 className="m-0 mb-1 text-[17px] font-bold text-[#1a1a2e]">{editId ? 'Kursni tahrirlash' : 'Kurs qoshish'}</h2>
+              <p className="m-0 text-[12.5px] text-[#9ca3af]">Bu yerda siz yangi Kurs qo'shishingiz yoki tahrirlashingiz mumkin.</p>
             </div>
             <button onClick={() => { setDrawerOpen(false); resetForm(); }} className="bg-none border-none cursor-pointer text-[#9ca3af] flex p-[2px]">
               <CloseOutlined fontSize="small" />
@@ -193,11 +242,18 @@ const KurslarContent = () => {
       </div>
 
       {/* Header */}
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
         <span className="font-semibold text-[15px] text-[#1a1a2e]">Kurslar</span>
-        <button onClick={() => setDrawerOpen(true)} className="flex items-center gap-1.5 bg-[#7c4dff] text-white border-none rounded-[10px] p-[8px_16px] text-[13px] font-semibold cursor-pointer hover:opacity-90">
-          <AddOutlined fontSize="small" /> Kurslar qo'shish
-        </button>
+        <div className="flex gap-2 w-full sm:w-auto">
+          <div className="relative flex-1 sm:w-[220px]">
+            <SearchOutlined className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[18px]" />
+            <input placeholder="Search" value={search} onChange={e => setSearch(e.target.value)}
+              className="w-full p-[8px_14px_8px_34px] rounded-[8px] border-[1.5px] border-[#e5e7eb] text-[13px] outline-none bg-white focus:border-[#7c4dff]" />
+          </div>
+          <button onClick={openAdd} className="flex items-center gap-1.5 bg-[#7c4dff] text-white border-none rounded-[10px] p-[8px_16px] text-[13px] font-semibold cursor-pointer hover:opacity-90 whitespace-nowrap">
+            <AddOutlined fontSize="small" /> Kurslar qo'shish
+          </button>
+        </div>
       </div>
 
       {/* Filial tabs */}
@@ -211,15 +267,15 @@ const KurslarContent = () => {
 
       {/* Course cards grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
-        {courses.map((card, i) => (
-          <div key={i} className="rounded-[12px] p-3.5 border" style={{ background: card.bg, borderColor: card.border }}>
+        {filteredCourses.map((card) => (
+          <div key={card.id} className="rounded-[12px] p-3.5 border" style={{ background: card.bg, borderColor: card.border }}>
             <div className="flex justify-between items-start mb-1.5">
               <span className="font-semibold text-[13px] text-[#1a1a2e] leading-[1.4]">{card.title}</span>
               <div className="flex gap-1 shrink-0 ml-1.5">
-                <button onClick={() => setCourses(prev => prev.filter((_, idx) => idx !== i))} className="bg-white/85 border-none rounded-[6px] p-1 cursor-pointer text-[#ef5350] flex">
+                <button onClick={() => handleDelete(card.id)} className="bg-white/85 border-none rounded-[6px] p-1 cursor-pointer text-[#ef5350] flex transition-colors hover:bg-white">
                   <DeleteOutlineOutlined style={{ fontSize: '14px' }} />
                 </button>
-                <button className="bg-white/85 border-none rounded-[6px] p-1 cursor-pointer text-[#7c4dff] flex">
+                <button onClick={() => openEdit(card)} className="bg-white/85 border-none rounded-[6px] p-1 cursor-pointer text-[#7c4dff] flex transition-colors hover:bg-white">
                   <EditOutlined style={{ fontSize: '14px' }} />
                 </button>
               </div>
@@ -240,56 +296,63 @@ const KurslarContent = () => {
 const xonalarFilialTabs = ['Fizika va Matematika', '4-maktab', 'Niner markazi', 'IELTS full mock', 'IELTS full mock centre', 'Arxiv'];
 
 const initialRooms = [
-  { name: 'genius room', capacity: 15 },
-  { name: 'Impact room', capacity: 12 },
-  { name: '1A', capacity: 25 },
-  { name: '205-xona', capacity: 32 },
-  { name: '16-xona', capacity: 18 },
-  { name: '5 xona', capacity: 30 },
-  { name: 'IELTS with islombek', capacity: 20 },
-  { name: 'Beginner', capacity: 18 },
-  { name: '99', capacity: 25 },
+  { id: 1, name: 'genius room', capacity: 15 },
+  { id: 2, name: 'Impact room', capacity: 12 },
+  { id: 3, name: '1A', capacity: 25 },
+  { id: 4, name: '205-xona', capacity: 32 },
+  { id: 5, name: '16-xona', capacity: 18 },
+  { id: 6, name: '5 xona', capacity: 30 },
+  { id: 7, name: 'IELTS with islombek', capacity: 20 },
+  { id: 8, name: 'Beginner', capacity: 18 },
+  { id: 9, name: '99', capacity: 25 },
 ];
 
 const XonalarContent = () => {
   const [activeFilial, setActiveFilial] = useState(0);
+  const [search, setSearch] = useState('');
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [form, setForm] = useState({ nomi: '', sigimi: '' });
   const [rooms, setRooms] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('rooms')) || initialRooms; }
+    try { 
+      const stored = JSON.parse(localStorage.getItem('rooms'));
+      if (stored && Array.isArray(stored)) return stored.map((r, i) => ({ ...r, id: r.id || i + 1 }));
+      return initialRooms; 
+    }
     catch { return initialRooms; }
   });
-  const [editIndex, setEditIndex] = useState(null);
+  const [editId, setEditId] = useState(null);
 
-  React.useEffect(() => { localStorage.setItem('rooms', JSON.stringify(rooms)); }, [rooms]);
+  useEffect(() => { localStorage.setItem('rooms', JSON.stringify(rooms)); }, [rooms]);
 
   const openAdd = () => {
-    setEditIndex(null);
+    setEditId(null);
     setForm({ nomi: '', sigimi: '' });
     setDrawerOpen(true);
   };
 
-  const openEdit = (i) => {
-    setEditIndex(i);
-    setForm({ nomi: rooms[i].name, sigimi: String(rooms[i].capacity) });
+  const openEdit = (room) => {
+    setEditId(room.id);
+    setForm({ nomi: room.name, sigimi: String(room.capacity) });
     setDrawerOpen(true);
   };
 
-  const handleDelete = (i) => {
-    setRooms(prev => prev.filter((_, idx) => idx !== i));
+  const handleDelete = (id) => {
+    setRooms(prev => prev.filter(r => r.id !== id));
   };
 
   const handleSave = () => {
     if (!form.nomi.trim()) return;
-    if (editIndex !== null) {
-      setRooms(prev => prev.map((r, i) => i === editIndex ? { name: form.nomi.trim(), capacity: Number(form.sigimi) || 0 } : r));
+    if (editId !== null) {
+      setRooms(prev => prev.map(r => r.id === editId ? { ...r, name: form.nomi.trim(), capacity: Number(form.sigimi) || 0 } : r));
     } else {
-      setRooms(prev => [...prev, { name: form.nomi.trim(), capacity: Number(form.sigimi) || 0 }]);
+      setRooms(prev => [...prev, { id: Date.now(), name: form.nomi.trim(), capacity: Number(form.sigimi) || 0 }]);
     }
     setForm({ nomi: '', sigimi: '' });
-    setEditIndex(null);
+    setEditId(null);
     setDrawerOpen(false);
   };
+
+  const filteredRooms = rooms.filter(r => r.name.toLowerCase().includes(search.toLowerCase()));
 
   return (
     <div className="bg-white rounded-[16px] p-5 shadow-[0_1px_8px_rgba(0,0,0,0.06)] relative">
@@ -304,12 +367,12 @@ const XonalarContent = () => {
       <div className={`fixed top-0 right-0 h-screen w-full sm:w-[360px] bg-white z-[1200] flex flex-col shadow-[-4px_0_24px_rgba(0,0,0,0.10)] transition-transform duration-350 ease-[cubic-bezier(0.4,0,0.2,1)] ${drawerOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         {/* Drawer header */}
         <div className="flex items-center gap-2.5 p-[20px_20px_16px_16px] border-b border-[#f1f1f5]">
-          <button onClick={() => setDrawerOpen(false)}
+          <button onClick={() => setDrawerOpen(prev => !prev)}
             className="w-[30px] h-[30px] rounded-[8px] border-none bg-[#f5f5fb] cursor-pointer flex items-center justify-center text-[#7c4dff] shrink-0 transition-colors duration-200 hover:bg-[#ede9ff]">
-            <ChevronRightOutlined fontSize="small" />
+            <ChevronLeftOutlined fontSize="small" style={{ transform: drawerOpen ? 'rotate(0deg)' : 'rotate(180deg)', transition: 'transform 350ms cubic-bezier(0.4,0,0.2,1)' }} />
           </button>
           <span className="font-bold text-[16px] text-[#1a1a2e]">
-            {editIndex !== null ? "Xonani tahrirlash" : "Xonani qo'shish"}
+            {editId !== null ? "Xonani tahrirlash" : "Xonani qo'shish"}
           </span>
         </div>
 
@@ -356,17 +419,24 @@ const XonalarContent = () => {
       </div>
 
       {/* Header */}
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
         <div className="flex items-center gap-2">
           <span className="font-semibold text-[15px] text-[#1a1a2e]">Xonalar</span>
           <button className="bg-none border-none cursor-pointer text-[#9ca3af] flex items-center p-0.5">
             <RefreshOutlined style={{ fontSize: '16px' }} />
           </button>
         </div>
-        <button onClick={openAdd}
-          className="flex items-center gap-1.5 bg-[#7c4dff] text-white border-none rounded-[10px] p-[8px_16px] text-[13px] font-semibold cursor-pointer hover:opacity-90">
-          <AddOutlined fontSize="small" /> Xonani qo'shish
-        </button>
+        <div className="flex gap-2 w-full sm:w-auto">
+          <div className="relative flex-1 sm:w-[220px]">
+            <SearchOutlined className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[18px]" />
+            <input placeholder="Search" value={search} onChange={e => setSearch(e.target.value)}
+              className="w-full p-[8px_14px_8px_34px] rounded-[8px] border-[1.5px] border-[#e5e7eb] text-[13px] outline-none bg-white focus:border-[#7c4dff]" />
+          </div>
+          <button onClick={openAdd}
+            className="flex items-center gap-1.5 bg-[#7c4dff] text-white border-none rounded-[10px] p-[8px_16px] text-[13px] font-semibold cursor-pointer hover:opacity-90 whitespace-nowrap">
+            <AddOutlined fontSize="small" /> Xonani qo'shish
+          </button>
+        </div>
       </div>
 
       {/* Filial tabs */}
@@ -380,18 +450,18 @@ const XonalarContent = () => {
 
       {/* Rooms grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
-        {rooms.map((room, i) => (
-          <div key={i} className="bg-[#fafafa] border border-[#f1f1f5] rounded-[10px] p-[14px_14px_12px_14px]">
+        {filteredRooms.map((room) => (
+          <div key={room.id} className="bg-[#fafafa] border border-[#f1f1f5] rounded-[10px] p-[14px_14px_12px_14px]">
             <div className="flex justify-between items-start">
               <div>
                 <p className="m-0 mb-1 font-semibold text-[13px] text-[#1a1a2e]">{room.name}</p>
                 <p className="m-0 text-[12px] text-[#9ca3af]">Sig'imi: {room.capacity}</p>
               </div>
               <div className="flex gap-1 shrink-0">
-                <button onClick={() => handleDelete(i)} className="bg-white border-none rounded-[6px] p-1 cursor-pointer text-[#ef5350] flex shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
+                <button onClick={() => handleDelete(room.id)} className="bg-white border-none rounded-[6px] p-1 cursor-pointer text-[#ef5350] flex shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
                   <DeleteOutlineOutlined style={{ fontSize: '14px' }} />
                 </button>
-                <button onClick={() => openEdit(i)} className="bg-white border-none rounded-[6px] p-1 cursor-pointer text-[#7c4dff] flex shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
+                <button onClick={() => openEdit(room)} className="bg-white border-none rounded-[6px] p-1 cursor-pointer text-[#7c4dff] flex shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
                   <EditOutlined style={{ fontSize: '14px' }} />
                 </button>
               </div>
@@ -405,29 +475,34 @@ const XonalarContent = () => {
 
 
 const Management = () => {
-  const [open, setOpen] = useState(true);
-  const [activeItem, setActiveItem] = useState(0);
+  const [activeItem, setActiveItem] = useState(null);
+  const [panelOpen, setPanelOpen] = useState(true);
+  const context = useOutletContext();
+  const isDesktopSidebarOpen = context ? context.isDesktopSidebarOpen : true;
 
   return (
     <div className="relative">
 
       {/* Fixed full-height sliding panel */}
-      <div className={`fixed top-0 h-screen overflow-hidden transition-all duration-350 ease-[cubic-bezier(0.4,0,0.2,1)] z-[1000] 
-        ${open ? 'w-[220px] border-r shadow-[4px_0_24px_rgba(124,77,255,0.10)]' : 'w-0 shadow-none'}
-        lg:left-[256px] left-0`}
+      <div className={`fixed top-0 h-screen overflow-hidden transition-all duration-350 ease-[cubic-bezier(0.4,0,0.2,1)] z-[1000] rounded-r-3xl 
+        ${panelOpen ? 'w-[220px] shadow-[4px_0_24px_rgba(124,77,255,0.10)]' : 'w-0 shadow-none'}
+        ${isDesktopSidebarOpen ? 'lg:left-[256px]' : 'lg:left-[80px]'} left-0`}
       >
-        <div className="w-[220px] h-full bg-white border-r border-[#f1f1f5] flex flex-col">
+        <div className="w-[220px] h-full bg-white flex flex-col">
           {/* Panel header */}
           <div className="flex items-center justify-between p-[20px_16px_14px_16px] border-b border-[#f1f1f5]">
             <span className="font-bold text-[15px] text-[#1a1a2e]">Menu</span>
-            <button onClick={() => setOpen(false)} className="w-7 h-7 rounded-[8px] border-none bg-[#f5f5fb] cursor-pointer flex items-center justify-center text-[#7c4dff] transition-colors duration-200 hover:bg-[#ede9ff]">
-              <ChevronLeftOutlined fontSize="small" />
+            <button
+              onClick={() => setPanelOpen(false)}
+              className="w-[28px] h-[28px] rounded-[8px] border-none bg-[#f5f5fb] cursor-pointer flex items-center justify-center text-[#7c4dff] shrink-0 transition-colors duration-200 hover:bg-[#ede9ff]"
+            >
+              <ChevronLeftOutlined fontSize="small" style={{ transform: panelOpen ? 'rotate(0deg)' : 'rotate(180deg)', transition: 'transform 350ms cubic-bezier(0.4,0,0.2,1)' }} />
             </button>
           </div>
           {/* Menu items */}
           <nav className="p-2.5 flex-1 overflow-y-auto">
             {menuItems.map((item, idx) => (
-              <button key={idx} onClick={() => setActiveItem(idx)} 
+              <button key={idx} onClick={() => { setActiveItem(idx); setPanelOpen(false); }} 
                 className={`flex items-center gap-2.5 w-full p-[10px_12px] rounded-[10px] border-none cursor-pointer font-medium text-[13.5px] text-left mb-0.5 transition-all duration-180 whitespace-nowrap ${activeItem === idx ? 'bg-[#ede9ff] text-[#7c4dff] font-semibold' : 'bg-transparent text-[#6b7280] hover:bg-[#f5f5fb] hover:text-[#7c4dff]'}`}>
                 <span className={`flex items-center ${activeItem === idx ? 'text-[#7c4dff]' : 'text-[#9ca3af]'}`}>{item.icon}</span>
                 {item.label}
@@ -437,39 +512,44 @@ const Management = () => {
         </div>
       </div>
 
-      {/* Toggle button (visible when panel closed) */}
-      {!open && (
-        <button onClick={() => setOpen(true)}
-          className="fixed top-20 lg:top-3 z-[1001] w-8 h-8 rounded-[8px] border-none bg-white cursor-pointer flex items-center justify-center text-[#7c4dff] shadow-[0_1px_8px_rgba(124,77,255,0.13)] transition-colors duration-200 hover:bg-[#ede9ff] lg:left-[268px] left-3"
-          title="Menyuni ochish">
-          <ChevronRightOutlined fontSize="small" />
-        </button>
-      )}
+      {/* Floating reopen button — visible only when panel is closed */}
+      <button
+        onClick={() => setPanelOpen(true)}
+        className={`fixed top-[72px] z-[1001] w-[28px] h-[28px] rounded-r-[8px] border-none bg-white shadow-[2px_0_8px_rgba(124,77,255,0.15)] cursor-pointer flex items-center justify-center text-[#7c4dff] transition-all duration-350 hover:bg-[#ede9ff] ${panelOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'} ${isDesktopSidebarOpen ? 'lg:left-[256px]' : 'lg:left-[80px]'} left-0`}
+      >
+        <ChevronRightOutlined fontSize="small" />
+      </button>
 
       {/* Main content — shifts right when panel is open */}
-      <div className={`transition-all duration-350 ease-[cubic-bezier(0.4,0,0.2,1)] py-1 ${open ? 'lg:ml-[220px] ml-0 opacity-40 lg:opacity-100' : 'ml-0'}`}>
-        <h1 className="text-[24px] font-bold text-[#1a1a2e] m-0 mb-1.5">Boshqarish</h1>
-        <p className="text-[13.5px] text-[#6b7280] m-0 mb-5 leading-[1.6]">
-          Ushbu sahifada siz sovg'alarni boshqarish imkoniyatiga ega bo'lasiz. Har bir sovg'a haqida batafsil ma'lumot va yangi sovg'a qo'shish imkoniyat bor.
-        </p>
-
-        {/* Horizontal tabs — panel bilan sinxron */}
-        <div className="flex border-b-2 border-[#f1f1f5] mb-5 overflow-x-auto">
-          {menuItems.map((item, i) => (
-            <button key={i} onClick={() => setActiveItem(i)} className={`p-[10px_16px] border-none bg-transparent cursor-pointer text-[13.5px] transition-all duration-180 mb-[-2px] whitespace-nowrap ${activeItem === i ? 'font-semibold text-[#7c4dff] border-b-2 border-[#7c4dff]' : 'font-normal text-[#6b7280] border-b-2 border-transparent'}`}>
-              {item.label}
-            </button>
-          ))}
-        </div>
-
-        {activeItem === 0 ? (
-          <KurslarContent />
-        ) : activeItem === 1 ? (
-          <XonalarContent />
+      <div className={`transition-all duration-350 ease-[cubic-bezier(0.4,0,0.2,1)] py-1 ${panelOpen ? 'lg:ml-[220px]' : 'ml-0'}`}>
+        {activeItem === null ? (
+          <Dashboard />
         ) : (
-          <div className="bg-white rounded-[16px] p-8 shadow-[0_1px_8px_rgba(0,0,0,0.06)] text-[#9ca3af] text-center text-[14px]">
-            {menuItems[activeItem].label} bo'limi tez orada qo'shiladi.
-          </div>
+          <>
+            <h1 className="text-[24px] font-bold text-[#1a1a2e] m-0 mb-1.5">Boshqarish</h1>
+            <p className="text-[13.5px] text-[#6b7280] m-0 mb-5 leading-[1.6]">
+              Ushbu sahifada siz kurslar va xonalarni boshqarish imkoniyatiga ega bo'lasiz. Har bir bo'limda qidiruv, tahrirlash va o'chirish imkoniyati bor.
+            </p>
+
+            {/* Horizontal tabs — panel bilan sinxron */}
+            <div className="flex border-b-2 border-[#f1f1f5] mb-5 overflow-x-auto">
+              {menuItems.map((item, i) => (
+                <button key={i} onClick={() => setActiveItem(i)} className={`p-[10px_16px] border-none bg-transparent cursor-pointer text-[13.5px] transition-all duration-180 mb-[-2px] whitespace-nowrap ${activeItem === i ? 'font-semibold text-[#7c4dff] border-b-2 border-[#7c4dff]' : 'font-normal text-[#6b7280] border-b-2 border-transparent'}`}>
+                  {item.label}
+                </button>
+              ))}
+            </div>
+
+            {activeItem === 0 ? (
+              <KurslarContent />
+            ) : activeItem === 1 ? (
+              <XonalarContent />
+            ) : (
+              <div className="bg-white rounded-[16px] p-8 shadow-[0_1px_8px_rgba(0,0,0,0.06)] text-[#9ca3af] text-center text-[14px]">
+                {menuItems[activeItem].label} bo'limi tez orada qo'shiladi.
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

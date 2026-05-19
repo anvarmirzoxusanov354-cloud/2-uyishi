@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { 
   GroupOutlined, 
   MenuBookOutlined, 
@@ -9,8 +9,12 @@ import {
 } from '@mui/icons-material';
 import { Accordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
 
+
+
 const Dashboard = () => {
   const [teachersCount] = useState(() => Number(localStorage.getItem('teachersCount') || 0));
+
+  // Count is read from localStorage initially
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
      
@@ -55,7 +59,6 @@ const Dashboard = () => {
           <p className="text-2xl font-bold text-gray-800">{teachersCount}</p>
         </div>
       </div>
-
 
       <div className="shadow-sm">
         <Accordion sx={{ borderRadius: '16px !important', '&:before': { display: 'none' }, border: '1px solid #f9fafb' }}>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -11,18 +11,21 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    const success = login(username, password);
-    
-    if (success) {
+    setError('');
+    setLoading(true);
+    const result = await login(username, password);
+    setLoading(false);
+    if (result.ok) {
       navigate('/');
     } else {
-      setError('Login yoki parol xato!');
+      setError(result.message || 'Telefon yoki parol xato!');
     }
   };
 
@@ -62,19 +65,19 @@ const Login = () => {
             )}
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Login</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Phone</label>
               <input 
                 type="text" 
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="Loginni kiriting" 
+                placeholder="+998906942321" 
                 className="w-full border border-gray-300 rounded px-3 py-2 outline-none focus:border-blue-500 transition-colors"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Parol</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Password</label>
               <div className="relative">
                 <input 
                   type={inputType} 
@@ -94,8 +97,15 @@ const Login = () => {
               </div>
             </div>
 
-            <button type="submit" className="w-full bg-[#1e2a4a] text-white py-3 rounded font-bold hover:bg-[#2a3a5e] transition-colors shadow-lg">
-              Kirish
+            <button type="submit" disabled={loading}
+              className="w-full bg-[#1e2a4a] text-white py-3 rounded font-bold hover:bg-[#2a3a5e] transition-colors shadow-lg disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+              {loading && (
+                <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                </svg>
+              )}
+              {loading ? 'Yuklanmoqda...' : 'Kirish'}
             </button>
           </form>
         </div>
